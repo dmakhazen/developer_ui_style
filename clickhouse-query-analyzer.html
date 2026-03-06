@@ -1,0 +1,491 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ClickHouse — Query Analyzer</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;500;600&family=Syne:wght@400;600;700;800&display=swap');
+
+:root {
+  --bg:       #080c14;
+  --s1:       #0e1420;
+  --s2:       #141c2e;
+  --s3:       #1a2438;
+  --border:   #1e2d45;
+  --border2:  #263550;
+  --text:     #cdd9f0;
+  --muted:    #4a6080;
+  --muted2:   #6a85a8;
+  --accent:   #00b4ff;
+  --accent2:  #0077cc;
+  --success:  #00d68f;
+  --warn:     #ffaa00;
+  --error:    #ff4757;
+  --purple:   #9b6dff;
+  --cyan:     #00e5cc;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { font-family: 'Syne', sans-serif; background: var(--bg); color: var(--text); font-size: 13px; min-height: 100vh; }
+
+/* scanline texture */
+body::before {
+  content: '';
+  position: fixed; inset: 0; pointer-events: none; z-index: 0;
+  background: repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(0,180,255,0.012) 2px, rgba(0,180,255,0.012) 4px);
+}
+
+/* ── SIDEBAR ── */
+.layout { display: flex; min-height: 100vh; position: relative; z-index: 1; }
+
+.sidebar {
+  width: 52px;
+  background: var(--s1);
+  border-right: 1px solid var(--border);
+  display: flex; flex-direction: column; align-items: center;
+  padding: 12px 0; gap: 4px; flex-shrink: 0;
+}
+.sb-logo {
+  width: 32px; height: 32px; border-radius: 8px;
+  background: linear-gradient(135deg, #00b4ff, #0055aa);
+  display: flex; align-items: center; justify-content: center;
+  font-family: 'JetBrains Mono', monospace; font-weight: 700; font-size: 13px; color: #fff;
+  margin-bottom: 16px; flex-shrink: 0;
+}
+.sb-icon {
+  width: 36px; height: 36px; border-radius: 7px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 15px; cursor: pointer; transition: all 0.15s; color: var(--muted);
+}
+.sb-icon:hover { background: var(--s2); color: var(--text); }
+.sb-icon.active { background: rgba(0,180,255,0.12); color: var(--accent); }
+.sb-divider { width: 24px; height: 1px; background: var(--border); margin: 4px 0; }
+
+/* ── MAIN ── */
+.main { flex: 1; display: flex; flex-direction: column; overflow: hidden; }
+
+/* topbar */
+.topbar {
+  height: 44px; background: var(--s1); border-bottom: 1px solid var(--border);
+  display: flex; align-items: center; padding: 0 20px; gap: 16px; flex-shrink: 0;
+}
+.topbar-title { font-weight: 700; font-size: 13px; color: var(--text); letter-spacing: 0.3px; }
+.topbar-sep { color: var(--border2); }
+.topbar-sub { color: var(--muted2); font-size: 12px; font-family: 'JetBrains Mono', monospace; }
+.topbar-right { margin-left: auto; display: flex; align-items: center; gap: 8px; }
+
+.chip {
+  padding: 3px 9px; border-radius: 4px; font-size: 11px; font-weight: 600;
+  font-family: 'JetBrains Mono', monospace; letter-spacing: 0.3px;
+}
+.chip-ok   { background: rgba(0,214,143,0.1); color: var(--success); border: 1px solid rgba(0,214,143,0.25); }
+.chip-warn { background: rgba(255,170,0,0.1); color: var(--warn);    border: 1px solid rgba(255,170,0,0.25); }
+.chip-err  { background: rgba(255,71,87,0.1); color: var(--error);   border: 1px solid rgba(255,71,87,0.25); }
+.chip-info { background: rgba(0,180,255,0.1); color: var(--accent);  border: 1px solid rgba(0,180,255,0.25); }
+
+/* ── CONTENT AREA ── */
+.content { flex: 1; display: flex; overflow: hidden; }
+
+/* left panel: query list */
+.panel-left {
+  width: 340px; border-right: 1px solid var(--border);
+  display: flex; flex-direction: column; flex-shrink: 0;
+}
+.panel-header {
+  padding: 10px 14px; border-bottom: 1px solid var(--border);
+  display: flex; align-items: center; justify-content: space-between;
+  font-size: 10px; font-weight: 700; color: var(--muted); text-transform: uppercase; letter-spacing: 1px;
+}
+.panel-header-right { display: flex; gap: 6px; }
+
+.filter-bar {
+  padding: 8px 12px; border-bottom: 1px solid var(--border);
+  display: flex; gap: 6px;
+}
+.filter-btn {
+  padding: 3px 8px; border-radius: 4px; font-size: 10px; font-weight: 600;
+  cursor: pointer; border: 1px solid var(--border2); background: transparent;
+  color: var(--muted2); font-family: 'JetBrains Mono', monospace; transition: all 0.12s;
+}
+.filter-btn:hover { border-color: var(--accent); color: var(--accent); }
+.filter-btn.on { background: rgba(0,180,255,0.1); border-color: var(--accent); color: var(--accent); }
+
+.query-list { overflow-y: auto; flex: 1; }
+.query-item {
+  padding: 11px 14px; border-bottom: 1px solid var(--border);
+  cursor: pointer; transition: background 0.1s; position: relative;
+}
+.query-item:hover { background: var(--s2); }
+.query-item.active { background: var(--s2); }
+.query-item.active::before {
+  content: ''; position: absolute; left: 0; top: 0; bottom: 0;
+  width: 2px; background: var(--accent);
+}
+.qi-top { display: flex; align-items: center; justify-content: space-between; margin-bottom: 5px; }
+.qi-query {
+  font-family: 'JetBrains Mono', monospace; font-size: 11px; color: var(--muted2);
+  white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 220px;
+  margin-bottom: 5px;
+}
+.qi-query .kw { color: var(--accent); }
+.qi-query .tbl { color: var(--cyan); }
+.qi-bottom { display: flex; gap: 10px; font-size: 10px; color: var(--muted); font-family: 'JetBrains Mono', monospace; }
+.qi-bottom .duration { color: var(--warn); font-weight: 600; }
+.qi-bottom .rows { color: var(--muted2); }
+
+/* right panel: query detail */
+.panel-right { flex: 1; display: flex; flex-direction: column; overflow: hidden; }
+
+.tabs {
+  display: flex; border-bottom: 1px solid var(--border);
+  padding: 0 16px; background: var(--s1); flex-shrink: 0;
+}
+.tab {
+  padding: 10px 14px; font-size: 11px; font-weight: 600; color: var(--muted);
+  cursor: pointer; border-bottom: 2px solid transparent; transition: all 0.12s;
+  text-transform: uppercase; letter-spacing: 0.6px;
+}
+.tab:hover { color: var(--text); }
+.tab.active { color: var(--accent); border-bottom-color: var(--accent); }
+
+.detail { flex: 1; overflow-y: auto; padding: 16px 20px; display: flex; flex-direction: column; gap: 14px; }
+
+/* stat row */
+.stat-row { display: grid; grid-template-columns: repeat(5, 1fr); gap: 10px; }
+.stat-card {
+  background: var(--s1); border: 1px solid var(--border); border-radius: 6px; padding: 12px 14px;
+}
+.stat-card-label { font-size: 10px; font-weight: 700; color: var(--muted); text-transform: uppercase; letter-spacing: 0.8px; margin-bottom: 6px; }
+.stat-card-value { font-family: 'JetBrains Mono', monospace; font-size: 20px; font-weight: 600; }
+.stat-card-sub { font-size: 10px; color: var(--muted); margin-top: 3px; font-family: 'JetBrains Mono', monospace; }
+.v-accent { color: var(--accent); }
+.v-warn   { color: var(--warn); }
+.v-ok     { color: var(--success); }
+.v-err    { color: var(--error); }
+.v-purple { color: var(--purple); }
+
+/* section */
+.section { background: var(--s1); border: 1px solid var(--border); border-radius: 7px; overflow: hidden; }
+.sec-head {
+  padding: 9px 14px; border-bottom: 1px solid var(--border);
+  display: flex; align-items: center; justify-content: space-between;
+  font-size: 10px; font-weight: 700; color: var(--muted);
+  text-transform: uppercase; letter-spacing: 0.9px;
+  background: var(--s2);
+}
+.sec-body { padding: 14px; }
+
+/* SQL block */
+.sql-block {
+  font-family: 'JetBrains Mono', monospace; font-size: 12px; line-height: 1.75;
+  background: var(--s2); border-radius: 5px; padding: 14px 16px;
+}
+.sql-block .kw  { color: #00b4ff; font-weight: 500; }
+.sql-block .fn  { color: #9b6dff; }
+.sql-block .tbl { color: #00e5cc; }
+.sql-block .str { color: #ffaa00; }
+.sql-block .cmt { color: var(--muted); }
+.sql-block .num { color: #00d68f; }
+.sql-block .punc { color: var(--muted2); }
+
+/* pipeline / stages */
+.pipeline { display: flex; gap: 0; align-items: stretch; }
+.stage {
+  flex: 1; padding: 12px 14px;
+  border-right: 1px solid var(--border);
+  position: relative;
+}
+.stage:last-child { border-right: none; }
+.stage-name { font-size: 10px; font-weight: 700; color: var(--muted); text-transform: uppercase; letter-spacing: 0.8px; margin-bottom: 8px; }
+.stage-val { font-family: 'JetBrains Mono', monospace; font-size: 16px; font-weight: 600; margin-bottom: 3px; }
+.stage-bar { height: 3px; border-radius: 2px; background: var(--border); margin-top: 8px; overflow: hidden; }
+.stage-bar-fill { height: 100%; border-radius: 2px; transition: width 0.6s; }
+
+/* parts table */
+.parts-table { width: 100%; border-collapse: collapse; font-size: 12px; }
+.parts-table th {
+  text-align: left; padding: 6px 10px;
+  font-size: 10px; font-weight: 700; color: var(--muted);
+  text-transform: uppercase; letter-spacing: 0.7px;
+  border-bottom: 1px solid var(--border);
+}
+.parts-table td { padding: 8px 10px; border-bottom: 1px solid var(--border); }
+.parts-table tr:last-child td { border-bottom: none; }
+.parts-table tr:hover td { background: rgba(0,180,255,0.03); }
+.mono { font-family: 'JetBrains Mono', monospace; }
+
+/* flamegraph-like bar */
+.flame-row { display: flex; align-items: center; gap: 10px; margin-bottom: 7px; }
+.flame-label { font-family: 'JetBrains Mono', monospace; font-size: 11px; color: var(--muted2); width: 160px; flex-shrink: 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.flame-bar-wrap { flex: 1; height: 16px; background: var(--s2); border-radius: 3px; overflow: hidden; position: relative; }
+.flame-bar { height: 100%; border-radius: 3px; display: flex; align-items: center; padding-left: 6px; font-size: 10px; font-family: 'JetBrains Mono', monospace; color: rgba(255,255,255,0.7); }
+.flame-time { font-family: 'JetBrains Mono', monospace; font-size: 11px; color: var(--warn); width: 60px; text-align: right; flex-shrink: 0; }
+
+/* btn */
+.btn { display: inline-flex; align-items: center; gap: 5px; padding: 5px 12px; border-radius: 5px; border: none; font-size: 11px; font-weight: 600; cursor: pointer; font-family: 'Syne', sans-serif; transition: all 0.12s; }
+.btn-primary { background: var(--accent2); color: #fff; }
+.btn-primary:hover { background: #0088ee; }
+.btn-ghost { background: transparent; color: var(--muted2); border: 1px solid var(--border2); }
+.btn-ghost:hover { color: var(--text); border-color: var(--border2); background: var(--s2); }
+
+.pulse { width: 7px; height: 7px; border-radius: 50%; background: var(--success); animation: pulse 2s infinite; display: inline-block; }
+@keyframes pulse { 0%,100%{opacity:1} 50%{opacity:0.25} }
+
+.tag { font-size: 9px; font-weight: 700; background: var(--purple); color: #fff; padding: 1px 5px; border-radius: 3px; letter-spacing: 0.3px; }
+</style>
+</head>
+<body>
+<div class="layout">
+
+<!-- SIDEBAR -->
+<div class="sidebar">
+  <div class="sb-logo">CH</div>
+  <div class="sb-icon active" title="Queries">🔍</div>
+  <div class="sb-icon" title="Tables">📋</div>
+  <div class="sb-icon" title="Clusters">🔗</div>
+  <div class="sb-divider"></div>
+  <div class="sb-icon" title="Metrics">📊</div>
+  <div class="sb-icon" title="Mutations">⚡</div>
+  <div class="sb-icon" title="Users">👤</div>
+  <div class="sb-divider"></div>
+  <div class="sb-icon" title="Settings">⚙️</div>
+</div>
+
+<div class="main">
+
+  <!-- TOPBAR -->
+  <div class="topbar">
+    <span class="topbar-title">Query Analyzer</span>
+    <span class="topbar-sep">/</span>
+    <span class="topbar-sub">system.query_log</span>
+    <span class="chip chip-ok"><span class="pulse"></span> cluster-prod online</span>
+    <span class="chip chip-info">v25.8.16.34</span>
+    <div class="topbar-right">
+      <button class="btn btn-ghost">Export CSV</button>
+      <button class="btn btn-primary">▶ Run Query</button>
+    </div>
+  </div>
+
+  <div class="content">
+
+    <!-- LEFT: query list -->
+    <div class="panel-left">
+      <div class="panel-header">
+        Slow Queries
+        <div class="panel-header-right">
+          <span class="chip chip-warn">14 slow</span>
+          <span class="chip chip-err">3 error</span>
+        </div>
+      </div>
+      <div class="filter-bar">
+        <button class="filter-btn on">All</button>
+        <button class="filter-btn">SELECT</button>
+        <button class="filter-btn">INSERT</button>
+        <button class="filter-btn">ALTER</button>
+      </div>
+      <div class="query-list">
+
+        <div class="query-item active">
+          <div class="qi-top">
+            <span class="chip chip-err">error</span>
+            <span style="font-size:10px;color:var(--muted);font-family:'JetBrains Mono',monospace">04:17:32</span>
+          </div>
+          <div class="qi-query"><span class="kw">SELECT</span> toYYYYMM(dt), <span class="kw">count</span>() <span class="kw">FROM</span> <span class="tbl">events_final</span></div>
+          <div class="qi-bottom">
+            <span class="duration">142.4s</span>
+            <span class="rows">↑ 48.2M rows</span>
+            <span>user: etl_svc</span>
+          </div>
+        </div>
+
+        <div class="query-item">
+          <div class="qi-top">
+            <span class="chip chip-warn">slow</span>
+            <span style="font-size:10px;color:var(--muted);font-family:'JetBrains Mono',monospace">04:12:11</span>
+          </div>
+          <div class="qi-query"><span class="kw">SELECT</span> user_id, <span class="kw">sum</span>(revenue) <span class="kw">FROM</span> <span class="tbl">orders_fact</span></div>
+          <div class="qi-bottom">
+            <span class="duration">38.1s</span>
+            <span class="rows">↑ 12.4M rows</span>
+            <span>user: analyst</span>
+          </div>
+        </div>
+
+        <div class="query-item">
+          <div class="qi-top">
+            <span class="chip chip-warn">slow</span>
+            <span style="font-size:10px;color:var(--muted);font-family:'JetBrains Mono',monospace">04:08:45</span>
+          </div>
+          <div class="qi-query"><span class="kw">ALTER TABLE</span> <span class="tbl">events_final</span> <span class="kw">UPDATE</span> col</div>
+          <div class="qi-bottom">
+            <span class="duration">21.7s</span>
+            <span class="rows">mutation</span>
+            <span>user: dbt_svc</span>
+          </div>
+        </div>
+
+        <div class="query-item">
+          <div class="qi-top">
+            <span class="chip chip-ok">ok</span>
+            <span style="font-size:10px;color:var(--muted);font-family:'JetBrains Mono',monospace">04:05:02</span>
+          </div>
+          <div class="qi-query"><span class="kw">SELECT</span> * <span class="kw">FROM</span> <span class="tbl">system.parts</span> <span class="kw">WHERE</span></div>
+          <div class="qi-bottom">
+            <span style="color:var(--success);font-weight:600">0.4s</span>
+            <span class="rows">↑ 320 rows</span>
+            <span>user: admin</span>
+          </div>
+        </div>
+
+        <div class="query-item">
+          <div class="qi-top">
+            <span class="chip chip-warn">slow</span>
+            <span style="font-size:10px;color:var(--muted);font-family:'JetBrains Mono',monospace">03:58:17</span>
+          </div>
+          <div class="qi-query"><span class="kw">SELECT</span> dt, <span class="kw">uniq</span>(uid) <span class="kw">FROM</span> <span class="tbl">events</span></div>
+          <div class="qi-bottom">
+            <span class="duration">17.2s</span>
+            <span class="rows">↑ 5.8M rows</span>
+            <span>user: analyst</span>
+          </div>
+        </div>
+
+        <div class="query-item">
+          <div class="qi-top">
+            <span class="chip chip-err">error</span>
+            <span style="font-size:10px;color:var(--muted);font-family:'JetBrains Mono',monospace">03:44:09</span>
+          </div>
+          <div class="qi-query"><span class="kw">INSERT INTO</span> <span class="tbl">orders_fact</span> <span class="kw">SELECT</span> *</div>
+          <div class="qi-bottom">
+            <span class="duration">8.9s</span>
+            <span class="rows">memory limit</span>
+            <span>user: etl_svc</span>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- RIGHT: query detail -->
+    <div class="panel-right">
+      <div class="tabs">
+        <div class="tab active">Overview</div>
+        <div class="tab">Execution Plan</div>
+        <div class="tab">Parts Read</div>
+        <div class="tab">Profile Events</div>
+      </div>
+
+      <div class="detail">
+
+        <!-- stats row -->
+        <div class="stat-row">
+          <div class="stat-card">
+            <div class="stat-card-label">Duration</div>
+            <div class="stat-card-value v-err">142.4s</div>
+            <div class="stat-card-sub">p99 этой недели: 38s</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-card-label">Rows Read</div>
+            <div class="stat-card-value v-accent">48.2M</div>
+            <div class="stat-card-sub">из 48.2M total</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-card-label">Memory Peak</div>
+            <div class="stat-card-value v-warn">18.4 GB</div>
+            <div class="stat-card-sub">limit: 20 GB</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-card-label">Parts Read</div>
+            <div class="stat-card-value v-err">2 841</div>
+            <div class="stat-card-sub">full scan — нет прунинга</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-card-label">Thread Count</div>
+            <div class="stat-card-value v-ok">32</div>
+            <div class="stat-card-sub">max parallelism</div>
+          </div>
+        </div>
+
+        <!-- SQL -->
+        <div class="section">
+          <div class="sec-head">
+            SQL
+            <div style="display:flex;gap:6px">
+              <span class="chip chip-err">full scan</span>
+              <span class="chip chip-warn">no partition pruning</span>
+            </div>
+          </div>
+          <div class="sec-body">
+            <div class="sql-block">
+<span class="kw">SELECT</span>
+  <span class="fn">toYYYYMM</span><span class="punc">(</span>dt<span class="punc">)</span>        <span class="kw">AS</span> month<span class="punc">,</span>
+  <span class="fn">count</span><span class="punc">()</span>             <span class="kw">AS</span> cnt<span class="punc">,</span>
+  <span class="fn">uniqExact</span><span class="punc">(</span>user_id<span class="punc">)</span>   <span class="kw">AS</span> uusers<span class="punc">,</span>
+  <span class="fn">sum</span><span class="punc">(</span>revenue<span class="punc">)</span>        <span class="kw">AS</span> total_rev
+<span class="kw">FROM</span> <span class="tbl">prod.events_final</span>
+<span class="kw">WHERE</span> ym_pv_dateTime <span class="punc">&gt;=</span> <span class="str">'2026-02-01'</span>       <span class="cmt">-- ⚠ String, не partition key</span>
+  <span class="kw">AND</span> ym_pv_dateTime  <span class="punc">&lt;</span>  <span class="str">'2026-03-01'</span>
+<span class="kw">GROUP BY</span> month
+<span class="kw">ORDER BY</span> month
+            </div>
+          </div>
+        </div>
+
+        <!-- Flamegraph: execution stages -->
+        <div class="section">
+          <div class="sec-head">Execution Timeline (по стейджам)</div>
+          <div class="sec-body">
+            <div class="flame-row">
+              <div class="flame-label">ReadFromMergeTree</div>
+              <div class="flame-bar-wrap">
+                <div class="flame-bar" style="width:94%;background:linear-gradient(90deg,#ff4757,#ff6b81)">2841 parts</div>
+              </div>
+              <div class="flame-time">134.2s</div>
+            </div>
+            <div class="flame-row">
+              <div class="flame-label">AggregatingTransform</div>
+              <div class="flame-bar-wrap">
+                <div class="flame-bar" style="width:35%;background:linear-gradient(90deg,#9b6dff,#b48aff)">uniqExact</div>
+              </div>
+              <div class="flame-time">5.1s</div>
+            </div>
+            <div class="flame-row">
+              <div class="flame-label">MergingAggregated</div>
+              <div class="flame-bar-wrap">
+                <div class="flame-bar" style="width:18%;background:linear-gradient(90deg,#0077cc,#00aaff)"></div>
+              </div>
+              <div class="flame-time">2.4s</div>
+            </div>
+            <div class="flame-row">
+              <div class="flame-label">Sorting</div>
+              <div class="flame-bar-wrap">
+                <div class="flame-bar" style="width:5%;background:linear-gradient(90deg,#00b894,#00d68f)"></div>
+              </div>
+              <div class="flame-time">0.7s</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Recommendation -->
+        <div style="background:rgba(255,170,0,0.06);border:1px solid rgba(255,170,0,0.25);border-radius:7px;padding:14px 16px;display:flex;gap:12px;align-items:flex-start">
+          <div style="font-size:20px;flex-shrink:0">⚠️</div>
+          <div>
+            <div style="font-weight:700;color:var(--warn);font-size:13px;margin-bottom:5px">Partition pruning не работает</div>
+            <div style="color:#94a3b8;font-size:12px;line-height:1.6">
+              Колонка <code style="font-family:'JetBrains Mono',monospace;color:var(--cyan)">ym_pv_dateTime</code> имеет тип <code style="font-family:'JetBrains Mono',monospace;color:var(--error)">String</code>, поэтому ClickHouse не может сопоставить её с partition key типа <code style="font-family:'JetBrains Mono',monospace;color:var(--success)">toYYYYMMDD(toDate(...))</code>. Прочитаны все 2841 партиций.
+            </div>
+            <div style="font-family:'JetBrains Mono',monospace;font-size:11px;background:rgba(255,170,0,0.08);padding:8px 10px;border-radius:5px;margin-top:8px;color:var(--warn)">
+              Исправление: WHERE toYYYYMMDD(toDate(ym_pv_dateTime)) BETWEEN 20260201 AND 20260228
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+  </div>
+</div>
+</div>
+</body>
+</html>

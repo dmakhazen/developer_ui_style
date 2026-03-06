@@ -1,0 +1,414 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Pipeline — CI/CD</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;500;600&family=DM+Sans:wght@300;400;500;600;700&display=swap');
+
+:root {
+  --bg:     #0a0f0d;
+  --s1:     #0f1612;
+  --s2:     #141e18;
+  --s3:     #1a271e;
+  --border: #1f2e24;
+  --text:   #d4e8da;
+  --muted:  #4a6652;
+  --muted2: #6b8f76;
+  --green:  #00e676;
+  --green2: #00c853;
+  --red:    #ff5252;
+  --yellow: #ffd740;
+  --blue:   #40c4ff;
+  --purple: #b388ff;
+  --orange: #ff9100;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { font-family: 'DM Sans', sans-serif; background: var(--bg); color: var(--text); font-size: 13px; min-height: 100vh; }
+
+/* ── TOP ── */
+.header {
+  background: var(--s1);
+  border-bottom: 1px solid var(--border);
+  padding: 0 24px;
+}
+.header-top {
+  height: 52px; display: flex; align-items: center; gap: 16px;
+}
+.header-logo { font-family: 'JetBrains Mono', monospace; font-weight: 700; font-size: 15px; color: var(--green); letter-spacing: -0.5px; }
+.header-logo span { color: var(--muted2); }
+.header-nav { display: flex; gap: 2px; margin-left: 16px; }
+.nav-item { padding: 5px 12px; border-radius: 5px; font-size: 12px; color: var(--muted2); cursor: pointer; transition: all 0.12s; }
+.nav-item:hover { color: var(--text); background: var(--s2); }
+.nav-item.active { color: var(--text); background: rgba(0,230,118,0.08); }
+.header-right { margin-left: auto; display: flex; align-items: center; gap: 10px; }
+
+.header-meta {
+  display: flex; align-items: center; gap: 24px; padding: 8px 0; border-top: 1px solid var(--border); font-size: 12px;
+}
+.meta-item { display: flex; align-items: center; gap: 6px; color: var(--muted2); }
+.meta-item strong { color: var(--text); font-weight: 600; }
+.meta-sep { color: var(--border); }
+
+/* badge */
+.badge { display: inline-flex; align-items: center; gap: 5px; padding: 3px 9px; border-radius: 4px; font-size: 11px; font-weight: 600; font-family: 'JetBrains Mono', monospace; }
+.badge-ok     { background: rgba(0,230,118,0.1);  color: var(--green);  border: 1px solid rgba(0,230,118,0.25); }
+.badge-fail   { background: rgba(255,82,82,0.1);  color: var(--red);    border: 1px solid rgba(255,82,82,0.25); }
+.badge-run    { background: rgba(64,196,255,0.1); color: var(--blue);   border: 1px solid rgba(64,196,255,0.25); }
+.badge-skip   { background: rgba(107,143,118,0.1);color: var(--muted2); border: 1px solid rgba(107,143,118,0.2); }
+.badge-warn   { background: rgba(255,215,64,0.1); color: var(--yellow); border: 1px solid rgba(255,215,64,0.25); }
+.dot { width: 6px; height: 6px; border-radius: 50%; background: currentColor; }
+
+/* btn */
+.btn { display:inline-flex; align-items:center; gap:5px; padding:5px 13px; border-radius:5px; border:none; font-family:'DM Sans',sans-serif; font-size:12px; font-weight:600; cursor:pointer; transition:all 0.12s; }
+.btn-primary { background: var(--green2); color: #000; }
+.btn-primary:hover { background: var(--green); }
+.btn-ghost { background: transparent; color: var(--muted2); border: 1px solid var(--border); }
+.btn-ghost:hover { color: var(--text); background: var(--s2); }
+.btn-danger { background: rgba(255,82,82,0.12); color: var(--red); border: 1px solid rgba(255,82,82,0.3); }
+
+/* ── BODY ── */
+.body { display: flex; height: calc(100vh - 100px); }
+
+/* left sidebar: run list */
+.runs-panel {
+  width: 280px; border-right: 1px solid var(--border);
+  display: flex; flex-direction: column; flex-shrink: 0;
+}
+.runs-header {
+  padding: 10px 14px; border-bottom: 1px solid var(--border);
+  display: flex; align-items: center; justify-content: space-between;
+  font-size: 10px; font-weight: 700; color: var(--muted); text-transform: uppercase; letter-spacing: 1px;
+}
+.run-item {
+  padding: 11px 14px; border-bottom: 1px solid var(--border);
+  cursor: pointer; transition: background 0.1s; position: relative;
+}
+.run-item:hover { background: var(--s2); }
+.run-item.active { background: var(--s2); }
+.run-item.active::before { content:''; position:absolute; left:0; top:0; bottom:0; width:2px; background:var(--green); }
+.run-row1 { display: flex; align-items: center; justify-content: space-between; margin-bottom: 4px; }
+.run-sha { font-family: 'JetBrains Mono', monospace; font-size: 11px; color: var(--blue); }
+.run-msg { font-size: 12px; color: var(--muted2); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; margin-bottom: 4px; }
+.run-meta { display: flex; gap: 10px; font-size: 10px; color: var(--muted); font-family: 'JetBrains Mono', monospace; }
+.run-duration { color: var(--yellow); }
+
+/* ── MAIN DETAIL ── */
+.detail { flex: 1; overflow-y: auto; padding: 18px 22px; display: flex; flex-direction: column; gap: 16px; }
+
+/* pipeline visual */
+.pipeline-wrap { background: var(--s1); border: 1px solid var(--border); border-radius: 8px; overflow: hidden; }
+.pipeline-head {
+  padding: 9px 14px; border-bottom: 1px solid var(--border); background: var(--s2);
+  display: flex; align-items: center; justify-content: space-between;
+  font-size: 10px; font-weight: 700; color: var(--muted); text-transform: uppercase; letter-spacing: 0.9px;
+}
+.pipeline-body { padding: 16px 14px; }
+
+.stages { display: flex; align-items: center; gap: 0; }
+.stage-block { display: flex; flex-direction: column; align-items: center; position: relative; }
+.stage-circle {
+  width: 44px; height: 44px; border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 16px; border: 2px solid;
+  position: relative; z-index: 1;
+}
+.stage-circle.ok     { border-color: var(--green);  background: rgba(0,230,118,0.1); }
+.stage-circle.fail   { border-color: var(--red);    background: rgba(255,82,82,0.1); }
+.stage-circle.skip   { border-color: var(--muted);  background: var(--s2); }
+.stage-circle.run    { border-color: var(--blue);   background: rgba(64,196,255,0.1); animation: blink 1.2s infinite; }
+@keyframes blink { 0%,100%{opacity:1}50%{opacity:0.4} }
+
+.stage-label { font-size: 10px; font-weight: 600; color: var(--muted2); margin-top: 6px; text-align: center; white-space: nowrap; }
+.stage-time  { font-family: 'JetBrains Mono', monospace; font-size: 10px; color: var(--muted); margin-top: 2px; }
+
+.stage-connector {
+  width: 60px; height: 2px; margin-top: -22px;
+  position: relative;
+}
+.stage-connector::before { content:''; position:absolute; top:0; left:0; right:0; height:2px; background: var(--border); }
+.stage-connector.done::before { background: var(--green2); }
+.stage-connector.fail::before { background: var(--red); opacity:0.4; }
+
+/* jobs grid */
+.jobs-grid { display: flex; flex-direction: column; gap: 6px; }
+.job-row {
+  background: var(--s2); border: 1px solid var(--border); border-radius: 6px;
+  display: flex; align-items: center; padding: 10px 14px; gap: 12px;
+  cursor: pointer; transition: border-color 0.12s;
+}
+.job-row:hover { border-color: var(--border); background: var(--s3); }
+.job-row.active-job { border-color: rgba(64,196,255,0.3); }
+.job-icon { font-size: 14px; flex-shrink: 0; }
+.job-name { font-weight: 600; font-size: 12px; flex: 1; }
+.job-runner { font-size: 11px; color: var(--muted2); font-family: 'JetBrains Mono', monospace; }
+.job-bar { width: 80px; height: 3px; background: var(--border); border-radius: 2px; overflow: hidden; }
+.job-bar-fill { height: 100%; border-radius: 2px; }
+.job-dur { font-family: 'JetBrains Mono', monospace; font-size: 11px; color: var(--muted2); width: 44px; text-align: right; }
+
+/* log */
+.log-block {
+  background: var(--s2); border: 1px solid var(--border); border-radius: 6px;
+  padding: 12px 14px; font-family: 'JetBrains Mono', monospace; font-size: 11px; line-height: 1.9;
+}
+.l-ts { color: var(--muted); }
+.l-ok { color: var(--green); }
+.l-err { color: var(--red); }
+.l-warn { color: var(--yellow); }
+.l-info { color: var(--blue); }
+.l-cmd { color: var(--purple); }
+.l-out { color: var(--muted2); }
+
+/* stat strip */
+.stat-strip { display: grid; grid-template-columns: repeat(4,1fr); gap: 10px; }
+.stat-box { background: var(--s1); border: 1px solid var(--border); border-radius: 6px; padding: 12px 14px; }
+.stat-label { font-size: 10px; font-weight: 700; color: var(--muted); text-transform: uppercase; letter-spacing: 0.8px; margin-bottom: 5px; }
+.stat-val { font-family: 'JetBrains Mono', monospace; font-size: 20px; font-weight: 600; }
+.stat-sub { font-size: 10px; color: var(--muted); margin-top: 2px; font-family: 'JetBrains Mono', monospace; }
+
+.pulse-blue { width:7px;height:7px;border-radius:50%;background:var(--blue);animation:pulse 1.5s infinite;display:inline-block; }
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:0.2}}
+</style>
+</head>
+<body>
+
+<!-- HEADER -->
+<div class="header">
+  <div class="header-top">
+    <div class="header-logo">pipe<span>line</span></div>
+    <nav class="header-nav">
+      <div class="nav-item active">Pipelines</div>
+      <div class="nav-item">Environments</div>
+      <div class="nav-item">Artifacts</div>
+      <div class="nav-item">Settings</div>
+    </nav>
+    <div class="header-right">
+      <button class="btn btn-danger">⏹ Cancel Run</button>
+      <button class="btn btn-primary">↺ Re-run</button>
+    </div>
+  </div>
+  <div class="header-meta">
+    <div class="meta-item">Repo: <strong>corp/data-platform</strong></div>
+    <div class="meta-sep">·</div>
+    <div class="meta-item">Branch: <strong style="color:var(--blue)">main</strong></div>
+    <div class="meta-sep">·</div>
+    <div class="meta-item">Commit: <strong style="color:var(--purple);font-family:'JetBrains Mono',monospace">a3f8c12</strong></div>
+    <div class="meta-sep">·</div>
+    <div class="meta-item">Trigger: <strong>push</strong></div>
+    <div class="meta-sep">·</div>
+    <div class="meta-item">by <strong>dev</strong></div>
+    <div style="margin-left:auto"><span class="badge badge-fail"><span class="dot"></span> failed · 4m 32s</span></div>
+  </div>
+</div>
+
+<div class="body">
+
+  <!-- RUNS LIST -->
+  <div class="runs-panel">
+    <div class="runs-header">
+      Recent Runs
+      <span class="badge badge-run"><span class="pulse-blue"></span> 1 running</span>
+    </div>
+
+    <div class="run-item active">
+      <div class="run-row1"><span class="run-sha">#247 a3f8c12</span><span class="badge badge-fail">failed</span></div>
+      <div class="run-msg">fix: dbt partition key type cast</div>
+      <div class="run-meta"><span class="run-duration">4m 32s</span><span>2 hours ago</span></div>
+    </div>
+    <div class="run-item">
+      <div class="run-row1"><span class="run-sha">#246 9e21da4</span><span class="badge badge-ok">passed</span></div>
+      <div class="run-msg">feat: add orders_fact model</div>
+      <div class="run-meta"><span style="color:var(--green);font-weight:600">3m 17s</span><span>5 hours ago</span></div>
+    </div>
+    <div class="run-item">
+      <div class="run-row1"><span class="run-sha">#245 bb10f3e</span><span class="badge badge-ok">passed</span></div>
+      <div class="run-msg">refactor: simplify staging models</div>
+      <div class="run-meta"><span style="color:var(--green);font-weight:600">2m 54s</span><span>yesterday</span></div>
+    </div>
+    <div class="run-item">
+      <div class="run-row1"><span class="run-sha">#244 1f7d9aa</span><span class="badge badge-warn">warn</span></div>
+      <div class="run-msg">chore: bump dbt-clickhouse 1.8.3</div>
+      <div class="run-meta"><span class="run-duration">5m 01s</span><span>yesterday</span></div>
+    </div>
+    <div class="run-item">
+      <div class="run-row1"><span class="run-sha">#243 cc8e441</span><span class="badge badge-ok">passed</span></div>
+      <div class="run-msg">fix: mutation WHERE clause</div>
+      <div class="run-meta"><span style="color:var(--green);font-weight:600">3m 44s</span><span>2 days ago</span></div>
+    </div>
+  </div>
+
+  <!-- DETAIL -->
+  <div class="detail">
+
+    <!-- stat strip -->
+    <div class="stat-strip">
+      <div class="stat-box">
+        <div class="stat-label">Total Time</div>
+        <div class="stat-val" style="color:var(--red)">4m 32s</div>
+        <div class="stat-sub">avg: 3m 20s (+37%)</div>
+      </div>
+      <div class="stat-box">
+        <div class="stat-label">Jobs</div>
+        <div class="stat-val" style="color:var(--text)">6 / 8</div>
+        <div class="stat-sub">2 failed, 0 skipped</div>
+      </div>
+      <div class="stat-box">
+        <div class="stat-label">Tests</div>
+        <div class="stat-val" style="color:var(--red)">47 / 52</div>
+        <div class="stat-sub">5 failed (dbt test)</div>
+      </div>
+      <div class="stat-box">
+        <div class="stat-label">Artifacts</div>
+        <div class="stat-val" style="color:var(--muted2)">—</div>
+        <div class="stat-sub">сборка не дошла</div>
+      </div>
+    </div>
+
+    <!-- pipeline stages -->
+    <div class="pipeline-wrap">
+      <div class="pipeline-head">
+        Pipeline Stages
+        <span style="font-size:10px;color:var(--muted2);font-weight:400;text-transform:none;letter-spacing:0">упало на стадии dbt-test</span>
+      </div>
+      <div class="pipeline-body">
+        <div class="stages">
+          <div class="stage-block">
+            <div class="stage-circle ok">✓</div>
+            <div class="stage-label">lint</div>
+            <div class="stage-time">0:18</div>
+          </div>
+          <div class="stage-connector done"></div>
+          <div class="stage-block">
+            <div class="stage-circle ok">✓</div>
+            <div class="stage-label">compile</div>
+            <div class="stage-time">0:44</div>
+          </div>
+          <div class="stage-connector done"></div>
+          <div class="stage-block">
+            <div class="stage-circle ok">✓</div>
+            <div class="stage-label">dbt run</div>
+            <div class="stage-time">2:07</div>
+          </div>
+          <div class="stage-connector fail"></div>
+          <div class="stage-block">
+            <div class="stage-circle fail">✗</div>
+            <div class="stage-label">dbt test</div>
+            <div class="stage-time">1:23</div>
+          </div>
+          <div class="stage-connector fail"></div>
+          <div class="stage-block">
+            <div class="stage-circle skip">○</div>
+            <div class="stage-label">publish</div>
+            <div class="stage-time">—</div>
+          </div>
+          <div class="stage-connector fail"></div>
+          <div class="stage-block">
+            <div class="stage-circle skip">○</div>
+            <div class="stage-label">deploy</div>
+            <div class="stage-time">—</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- jobs -->
+    <div class="pipeline-wrap">
+      <div class="pipeline-head">Jobs</div>
+      <div style="padding:12px 14px;display:flex;flex-direction:column;gap:6px">
+
+        <div class="job-row">
+          <div class="job-icon">🔍</div>
+          <div class="job-name">sqlfluff-lint</div>
+          <div class="job-runner">runner-linux-01</div>
+          <div class="job-bar"><div class="job-bar-fill" style="width:100%;background:var(--green2)"></div></div>
+          <div class="job-dur" style="color:var(--green)">0:18</div>
+          <span class="badge badge-ok">ok</span>
+        </div>
+
+        <div class="job-row">
+          <div class="job-icon">⚙️</div>
+          <div class="job-name">dbt-compile</div>
+          <div class="job-runner">runner-linux-02</div>
+          <div class="job-bar"><div class="job-bar-fill" style="width:100%;background:var(--green2)"></div></div>
+          <div class="job-dur" style="color:var(--green)">0:44</div>
+          <span class="badge badge-ok">ok</span>
+        </div>
+
+        <div class="job-row">
+          <div class="job-icon">▶️</div>
+          <div class="job-name">dbt-run (staging)</div>
+          <div class="job-runner">runner-linux-01</div>
+          <div class="job-bar"><div class="job-bar-fill" style="width:100%;background:var(--green2)"></div></div>
+          <div class="job-dur" style="color:var(--green)">1:12</div>
+          <span class="badge badge-ok">ok</span>
+        </div>
+
+        <div class="job-row">
+          <div class="job-icon">▶️</div>
+          <div class="job-name">dbt-run (marts)</div>
+          <div class="job-runner">runner-linux-02</div>
+          <div class="job-bar"><div class="job-bar-fill" style="width:100%;background:var(--green2)"></div></div>
+          <div class="job-dur" style="color:var(--green)">0:55</div>
+          <span class="badge badge-ok">ok</span>
+        </div>
+
+        <div class="job-row active-job" style="border-color:rgba(255,82,82,0.35)">
+          <div class="job-icon">🧪</div>
+          <div class="job-name">dbt-test</div>
+          <div class="job-runner">runner-linux-01</div>
+          <div class="job-bar"><div class="job-bar-fill" style="width:100%;background:var(--red);opacity:0.7"></div></div>
+          <div class="job-dur" style="color:var(--red)">1:23</div>
+          <span class="badge badge-fail">failed</span>
+        </div>
+
+        <div class="job-row" style="opacity:0.4">
+          <div class="job-icon">📦</div>
+          <div class="job-name">publish-artifacts</div>
+          <div class="job-runner">—</div>
+          <div class="job-bar"><div class="job-bar-fill" style="width:0%"></div></div>
+          <div class="job-dur">—</div>
+          <span class="badge badge-skip">skipped</span>
+        </div>
+
+        <div class="job-row" style="opacity:0.4">
+          <div class="job-icon">🚀</div>
+          <div class="job-name">deploy-prod</div>
+          <div class="job-runner">—</div>
+          <div class="job-bar"><div class="job-bar-fill" style="width:0%"></div></div>
+          <div class="job-dur">—</div>
+          <span class="badge badge-skip">skipped</span>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- failed test log -->
+    <div class="pipeline-wrap">
+      <div class="pipeline-head">
+        dbt-test — вывод (5 failed)
+        <button class="btn btn-ghost" style="font-size:10px;padding:3px 8px">Full Log</button>
+      </div>
+      <div style="padding:12px 14px">
+        <div class="log-block">
+<span class="l-ts">13:17:02</span>  <span class="l-info">[INFO]</span>  Running 52 tests<br>
+<span class="l-ts">13:17:04</span>  <span class="l-ok">[PASS]</span>  not_null_orders_fact_order_id .................. 0.4s<br>
+<span class="l-ts">13:17:05</span>  <span class="l-ok">[PASS]</span>  not_null_orders_fact_user_id ................... 0.3s<br>
+<span class="l-ts">13:17:06</span>  <span class="l-ok">[PASS]</span>  unique_orders_fact_order_id .................... 0.5s<br>
+<span class="l-ts">13:17:08</span>  <span class="l-err">[FAIL]</span>  not_null_orders_fact_user_segment .............. <span class="l-err">1 204 failures</span><br>
+<span class="l-ts">13:17:09</span>  <span class="l-err">[FAIL]</span>  accepted_values_orders_fact_status ............. <span class="l-err">87 failures</span><br>
+<span class="l-ts">13:17:11</span>  <span class="l-ok">[PASS]</span>  not_null_revenue_report_month .................. 0.4s<br>
+<span class="l-ts">13:17:13</span>  <span class="l-warn">[WARN]</span>  relationship_orders_users ...................... <span class="l-warn">442 warnings</span><br>
+<span class="l-ts">13:17:14</span>  <span class="l-err">[FAIL]</span>  not_null_users_user_segment .................... <span class="l-err">column missing</span><br>
+<span class="l-ts">13:17:20</span>  <span class="l-out">  ...</span><br>
+<span class="l-ts">13:18:25</span>  <span class="l-err">Done. FAIL=5  WARN=1  ERROR=0  SKIP=0  PASS=47  TOTAL=53</span>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+</div>
+</body>
+</html>

@@ -1,0 +1,632 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Airflow × dbt — UI Mockup</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@300;400;500;600&display=swap');
+
+  :root {
+    --bg: #0f1117;
+    --surface: #161b27;
+    --surface2: #1e2535;
+    --border: #2a3144;
+    --accent: #3b82f6;
+    --accent2: #22d3ee;
+    --success: #22c55e;
+    --warn: #f59e0b;
+    --error: #ef4444;
+    --text: #e2e8f0;
+    --muted: #64748b;
+    --new: #a78bfa;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'IBM Plex Sans', sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    min-height: 100vh;
+    font-size: 13px;
+  }
+
+  /* ── TOPBAR ── */
+  .topbar {
+    height: 48px;
+    background: var(--surface);
+    border-bottom: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    padding: 0 20px;
+    gap: 24px;
+  }
+  .topbar-logo {
+    font-family: 'JetBrains Mono', monospace;
+    font-weight: 600;
+    font-size: 15px;
+    color: #38bdf8;
+    letter-spacing: -0.5px;
+  }
+  .topbar-logo span { color: var(--new); }
+  .topbar-nav { display: flex; gap: 4px; }
+  .topbar-nav a {
+    color: var(--muted);
+    text-decoration: none;
+    padding: 4px 10px;
+    border-radius: 4px;
+    font-size: 12px;
+    transition: all 0.15s;
+  }
+  .topbar-nav a:hover { color: var(--text); background: var(--surface2); }
+
+  /* ── BREADCRUMB ── */
+  .breadcrumb {
+    padding: 10px 24px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    color: var(--muted);
+    font-size: 12px;
+    border-bottom: 1px solid var(--border);
+    background: var(--surface);
+  }
+  .breadcrumb span { color: var(--text); }
+  .breadcrumb .sep { opacity: 0.4; }
+
+  /* ── TASK HEADER ── */
+  .task-header {
+    background: var(--surface);
+    border-bottom: 1px solid var(--border);
+    padding: 16px 24px;
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+  }
+  .task-title {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 18px;
+    font-weight: 600;
+    color: var(--text);
+    margin-bottom: 6px;
+  }
+  .task-meta { display: flex; gap: 16px; align-items: center; }
+  .badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    padding: 2px 8px;
+    border-radius: 999px;
+    font-size: 11px;
+    font-weight: 500;
+  }
+  .badge-failed { background: rgba(239,68,68,0.15); color: var(--error); border: 1px solid rgba(239,68,68,0.3); }
+  .badge-success { background: rgba(34,197,94,0.15); color: var(--success); border: 1px solid rgba(34,197,94,0.3); }
+  .badge-dbt { background: rgba(167,139,250,0.12); color: var(--new); border: 1px solid rgba(167,139,250,0.25); }
+  .dot { width: 6px; height: 6px; border-radius: 50%; background: currentColor; }
+
+  .task-actions { display: flex; gap: 8px; align-items: center; }
+
+  /* кнопки */
+  .btn {
+    display: inline-flex; align-items: center; gap: 6px;
+    padding: 6px 14px; border-radius: 6px; border: none;
+    font-family: 'IBM Plex Sans', sans-serif;
+    font-size: 12px; font-weight: 500; cursor: pointer;
+    transition: all 0.15s;
+  }
+  .btn-primary { background: var(--accent); color: #fff; }
+  .btn-primary:hover { background: #2563eb; }
+  .btn-ghost { background: transparent; color: var(--muted); border: 1px solid var(--border); }
+  .btn-ghost:hover { color: var(--text); border-color: #3b4d6a; background: var(--surface2); }
+  .btn-new {
+    background: rgba(167,139,250,0.15);
+    color: var(--new);
+    border: 1px solid rgba(167,139,250,0.3);
+    position: relative;
+  }
+  .btn-new::after {
+    content: 'NEW';
+    position: absolute;
+    top: -8px; right: -8px;
+    background: var(--new);
+    color: #fff;
+    font-size: 8px;
+    font-weight: 700;
+    padding: 1px 4px;
+    border-radius: 3px;
+    letter-spacing: 0.5px;
+  }
+  .btn-new:hover { background: rgba(167,139,250,0.25); }
+
+  /* ── TABS ── */
+  .tabs {
+    display: flex;
+    gap: 2px;
+    padding: 0 24px;
+    background: var(--surface);
+    border-bottom: 1px solid var(--border);
+  }
+  .tab {
+    padding: 10px 16px;
+    font-size: 12px;
+    color: var(--muted);
+    cursor: pointer;
+    border-bottom: 2px solid transparent;
+    transition: all 0.15s;
+    display: flex; align-items: center; gap: 6px;
+  }
+  .tab:hover { color: var(--text); }
+  .tab.active { color: var(--text); border-bottom-color: var(--accent); }
+  .tab.new-tab { color: var(--new); }
+  .tab.new-tab.active { border-bottom-color: var(--new); }
+  .tab-pill {
+    background: rgba(167,139,250,0.2);
+    color: var(--new);
+    font-size: 9px;
+    padding: 1px 5px;
+    border-radius: 3px;
+    font-weight: 600;
+    letter-spacing: 0.3px;
+  }
+
+  /* ── CONTENT ── */
+  .content { padding: 20px 24px; max-width: 1200px; }
+
+  .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 16px; }
+  .grid-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 16px; margin-bottom: 16px; }
+
+  .card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    overflow: hidden;
+  }
+  .card-header {
+    padding: 10px 14px;
+    border-bottom: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    font-size: 11px;
+    font-weight: 600;
+    color: var(--muted);
+    text-transform: uppercase;
+    letter-spacing: 0.8px;
+  }
+  .card-body { padding: 14px; }
+
+  /* ── NEW TAB: dbt Model ── */
+
+  /* Run кнопка */
+  .run-block {
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 16px;
+    margin-bottom: 16px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+  .run-info { display: flex; flex-direction: column; gap: 4px; }
+  .run-title { font-weight: 600; font-size: 14px; }
+  .run-sub { color: var(--muted); font-size: 12px; }
+  .run-buttons { display: flex; gap: 8px; }
+
+  /* Table state */
+  .table-state {
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    overflow: hidden;
+    margin-bottom: 16px;
+  }
+  .table-state-header {
+    background: var(--surface2);
+    padding: 10px 14px;
+    font-size: 11px;
+    font-weight: 600;
+    color: var(--muted);
+    text-transform: uppercase;
+    letter-spacing: 0.8px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    border-bottom: 1px solid var(--border);
+  }
+  .table-state-header .live { display: flex; align-items: center; gap: 6px; color: var(--success); font-size: 11px; }
+  .pulse {
+    width: 7px; height: 7px; border-radius: 50%; background: var(--success);
+    animation: pulse 2s infinite;
+  }
+  @keyframes pulse {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.3; }
+  }
+  .table-state-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 0;
+  }
+  .stat-cell {
+    padding: 14px 16px;
+    border-right: 1px solid var(--border);
+  }
+  .stat-cell:last-child { border-right: none; }
+  .stat-label { color: var(--muted); font-size: 11px; margin-bottom: 6px; }
+  .stat-value { font-family: 'JetBrains Mono', monospace; font-size: 18px; font-weight: 600; }
+  .stat-sub { color: var(--muted); font-size: 10px; margin-top: 3px; }
+
+  /* Manual change warning */
+  .manual-warn {
+    background: rgba(245,158,11,0.08);
+    border: 1px solid rgba(245,158,11,0.3);
+    border-radius: 8px;
+    padding: 12px 16px;
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    margin-bottom: 16px;
+  }
+  .warn-icon { font-size: 18px; flex-shrink: 0; }
+  .warn-title { font-weight: 600; color: var(--warn); font-size: 13px; margin-bottom: 3px; }
+  .warn-text { color: #94a3b8; font-size: 12px; line-height: 1.5; }
+  .warn-detail {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    background: rgba(245,158,11,0.1);
+    padding: 8px 10px;
+    border-radius: 5px;
+    margin-top: 8px;
+    color: var(--warn);
+  }
+
+  /* dbt error block */
+  .error-block {
+    border: 1px solid rgba(239,68,68,0.25);
+    border-radius: 8px;
+    overflow: hidden;
+    margin-bottom: 16px;
+  }
+  .error-header {
+    background: rgba(239,68,68,0.08);
+    padding: 10px 14px;
+    border-bottom: 1px solid rgba(239,68,68,0.2);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    font-size: 11px;
+    font-weight: 600;
+    color: var(--error);
+    text-transform: uppercase;
+    letter-spacing: 0.8px;
+  }
+  .error-body { padding: 14px; }
+  .error-field { margin-bottom: 10px; }
+  .error-field-label { color: var(--muted); font-size: 10px; text-transform: uppercase; letter-spacing: 0.6px; margin-bottom: 4px; }
+  .error-field-value {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 12px;
+    background: var(--surface2);
+    padding: 8px 10px;
+    border-radius: 5px;
+    color: #fca5a5;
+    line-height: 1.6;
+  }
+  .error-field-value .err-line { color: var(--error); font-weight: 600; }
+  .error-field-value .err-ctx { color: var(--muted); }
+
+  /* lineage mini */
+  .lineage {
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 16px;
+    margin-bottom: 16px;
+  }
+  .lineage-title { font-size: 11px; font-weight: 600; color: var(--muted); text-transform: uppercase; letter-spacing: 0.8px; margin-bottom: 14px; }
+  .lineage-row { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+  .lineage-node {
+    display: flex; align-items: center; gap: 6px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 6px 10px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+  }
+  .lineage-node.current {
+    border-color: rgba(239,68,68,0.5);
+    background: rgba(239,68,68,0.06);
+    color: #fca5a5;
+  }
+  .lineage-node.ok { border-color: rgba(34,197,94,0.3); }
+  .lineage-arrow { color: var(--muted); font-size: 14px; }
+
+  /* стандартные логи */
+  .log-block {
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 12px 14px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    line-height: 1.8;
+    color: #94a3b8;
+  }
+  .log-block .l-time { color: var(--muted); }
+  .log-block .l-info { color: var(--accent2); }
+  .log-block .l-warn { color: var(--warn); }
+  .log-block .l-err { color: var(--error); }
+  .log-block .l-ok { color: var(--success); }
+
+  /* аннотации NEW */
+  .new-label {
+    font-size: 10px;
+    font-weight: 700;
+    background: var(--new);
+    color: #fff;
+    padding: 1px 5px;
+    border-radius: 3px;
+    letter-spacing: 0.3px;
+  }
+
+  /* section title */
+  .section-title {
+    font-size: 11px;
+    font-weight: 600;
+    color: var(--muted);
+    text-transform: uppercase;
+    letter-spacing: 0.8px;
+    margin-bottom: 10px;
+    display: flex; align-items: center; gap: 8px;
+  }
+
+  /* dag graph placeholder */
+  .dag-graph {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    height: 160px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 16px;
+    position: relative;
+    overflow: hidden;
+  }
+  .dag-graph::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: repeating-linear-gradient(
+      0deg, transparent, transparent 24px, rgba(255,255,255,0.02) 24px, rgba(255,255,255,0.02) 25px
+    ),
+    repeating-linear-gradient(
+      90deg, transparent, transparent 24px, rgba(255,255,255,0.02) 24px, rgba(255,255,255,0.02) 25px
+    );
+  }
+  .dag-node {
+    position: absolute;
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 6px 12px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    white-space: nowrap;
+  }
+  .dag-node.ok { border-color: rgba(34,197,94,0.4); color: var(--success); }
+  .dag-node.failed { border-color: rgba(239,68,68,0.5); color: var(--error); background: rgba(239,68,68,0.07); }
+  .dag-node.waiting { border-color: rgba(245,158,11,0.3); color: var(--warn); }
+  .dag-line {
+    position: absolute;
+    background: var(--border);
+    height: 1px;
+  }
+
+  .divider { height: 1px; background: var(--border); margin: 4px 0 16px; }
+</style>
+</head>
+<body>
+
+<!-- TOPBAR -->
+<div class="topbar">
+  <div class="topbar-logo">Apache <span>Airflow</span></div>
+  <nav class="topbar-nav">
+    <a href="#">DAGs</a>
+    <a href="#">Datasets</a>
+    <a href="#">Security</a>
+    <a href="#">Browse</a>
+    <a href="#">Admin</a>
+  </nav>
+</div>
+
+<!-- BREADCRUMB -->
+<div class="breadcrumb">
+  DAGs <span class="sep">/</span>
+  <span>data_dbt_daily</span>
+  <span class="sep">/</span>
+  Grid
+  <span class="sep">/</span>
+  <span>dbt_group.orders_fact</span>
+</div>
+
+<!-- TASK HEADER -->
+<div class="task-header">
+  <div>
+    <div class="task-title">dbt_group.orders_fact</div>
+    <div class="task-meta">
+      <span class="badge badge-failed"><span class="dot"></span> failed</span>
+      <span class="badge badge-dbt">dbt model</span>
+      <span style="color:var(--muted);font-size:11px">Run: 2026-03-06 04:00 UTC</span>
+    </div>
+  </div>
+  <div class="task-actions">
+    <button class="btn btn-ghost">Logs</button>
+    <button class="btn btn-ghost">XCom</button>
+    <button class="btn btn-new">▶ Run dbt model</button>
+  </div>
+</div>
+
+<!-- TABS -->
+<div class="tabs">
+  <div class="tab">Details</div>
+  <div class="tab">Rendered Template</div>
+  <div class="tab">Log</div>
+  <div class="tab active new-tab">dbt <span class="tab-pill">NEW</span></div>
+  <div class="tab new-tab">Table State <span class="tab-pill">NEW</span></div>
+</div>
+
+<!-- CONTENT: dbt tab active -->
+<div class="content">
+
+  <!-- Run block -->
+  <div class="run-block">
+    <div class="run-info">
+      <div class="run-title">orders_fact</div>
+      <div class="run-sub">project: data_dbt &nbsp;·&nbsp; schema: analytics &nbsp;·&nbsp; materialization: incremental</div>
+    </div>
+    <div class="run-buttons">
+      <button class="btn btn-ghost">dbt test</button>
+      <button class="btn btn-ghost">dbt compile</button>
+      <button class="btn btn-primary">▶ dbt run --select orders_fact</button>
+    </div>
+  </div>
+
+  <!-- Manual change warning -->
+  <div class="manual-warn">
+    <div class="warn-icon">⚠️</div>
+    <div>
+      <div class="warn-title">Обнаружены ручные изменения в таблице</div>
+      <div class="warn-text">
+        Таблица <code>analytics.orders_fact</code> была изменена вручную после последнего успешного запуска dbt.
+        Данные могут расходиться с тем, что построила модель.
+      </div>
+      <div class="warn-detail">
+        last dbt run:&nbsp;&nbsp; 2026-03-05 04:02:11<br>
+        table modified: 2026-03-05 11:47:33 &nbsp;← <strong>на 7ч 45м позже</strong><br>
+        rows delta:&nbsp;&nbsp;&nbsp;&nbsp; +1 204 строки вне расписания
+      </div>
+    </div>
+  </div>
+
+  <!-- dbt Error -->
+  <div class="error-block">
+    <div class="error-header">
+      <span>⚡ dbt compilation error</span>
+      <span style="font-weight:400;text-transform:none;letter-spacing:0">orders_fact.sql · строка 47</span>
+    </div>
+    <div class="error-body">
+      <div class="error-field">
+        <div class="error-field-label">Модель</div>
+        <div class="error-field-value">models/marts/orders_fact.sql</div>
+      </div>
+      <div class="error-field">
+        <div class="error-field-label">Ошибка</div>
+        <div class="error-field-value">
+          <span class="err-line">Database Error in model orders_fact</span><br>
+          <span class="err-ctx">  Code: 47. DB::Exception: Missing columns: 'user_segment'</span><br>
+          <span class="err-ctx">  while processing query. (UNKNOWN_IDENTIFIER)</span>
+        </div>
+      </div>
+      <div class="error-field">
+        <div class="error-field-label">Контекст SQL (строка 47)</div>
+        <div class="error-field-value">
+          <span class="err-ctx">45 &nbsp;&nbsp;FROM {{ ref('orders_raw') }} o</span><br>
+          <span class="err-ctx">46 &nbsp;&nbsp;LEFT JOIN {{ ref('users') }} u ON o.user_id = u.id</span><br>
+          <span class="err-line">47 &nbsp;&nbsp;WHERE u.user_segment = 'premium'  ← колонки нет в users</span><br>
+          <span class="err-ctx">48 &nbsp;&nbsp;GROUP BY ...</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Lineage -->
+  <div class="lineage">
+    <div class="lineage-title">Lineage из manifest.json</div>
+    <div class="lineage-row">
+      <div class="lineage-node ok"><span style="color:var(--success)">✓</span> orders_raw</div>
+      <div class="lineage-arrow">→</div>
+      <div class="lineage-node current"><span>✗</span> orders_fact</div>
+      <div class="lineage-arrow">→</div>
+      <div class="lineage-node waiting" style="opacity:0.5">⏸ revenue_report</div>
+      <div class="lineage-arrow" style="opacity:0.4">→</div>
+      <div class="lineage-node waiting" style="opacity:0.4">⏸ dashboard_summary</div>
+    </div>
+    <div style="margin-top:10px;font-size:11px;color:var(--muted)">
+      2 downstream-модели заблокированы из-за падения orders_fact
+    </div>
+  </div>
+
+  <!-- ─── TABLE STATE TAB ─── -->
+  <div class="divider"></div>
+  <div class="section-title">
+    <span>Table State</span>
+    <span class="new-label">NEW TAB</span>
+    <span style="color:var(--muted);font-weight:400;text-transform:none;letter-spacing:0">analytics.orders_fact в ClickHouse</span>
+  </div>
+
+  <!-- Live stats -->
+  <div class="table-state">
+    <div class="table-state-header">
+      <span>Текущее состояние таблицы</span>
+      <div class="live"><div class="pulse"></div> live · обновляется из system.tables</div>
+    </div>
+    <div class="table-state-grid">
+      <div class="stat-cell">
+        <div class="stat-label">Строк сейчас</div>
+        <div class="stat-value" style="color:var(--accent2)">48 204 331</div>
+        <div class="stat-sub">+1 204 вне расписания ⚠</div>
+      </div>
+      <div class="stat-cell">
+        <div class="stat-label">Размер на диске</div>
+        <div class="stat-value">14.2 GB</div>
+        <div class="stat-sub">compressed</div>
+      </div>
+      <div class="stat-cell">
+        <div class="stat-label">Последний INSERT</div>
+        <div class="stat-value" style="font-size:13px;margin-top:3px">11:47:33</div>
+        <div class="stat-sub">2026-03-05 · вручную ⚠</div>
+      </div>
+      <div class="stat-cell">
+        <div class="stat-label">Последний dbt run</div>
+        <div class="stat-value" style="font-size:13px;margin-top:3px">04:02:11</div>
+        <div class="stat-sub" style="color:var(--error)">failed</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- DAG graph -->
+  <div class="section-title" style="margin-top:8px">
+    <span>DAG · текущий ран</span>
+  </div>
+  <div class="dag-graph">
+    <!-- nodes -->
+    <div class="dag-node ok" style="left:40px;top:60px">orders_raw</div>
+    <div class="dag-node ok" style="left:180px;top:30px">users</div>
+    <div class="dag-node ok" style="left:180px;top:90px">products</div>
+    <div class="dag-node failed" style="left:340px;top:60px">orders_fact ✗</div>
+    <div class="dag-node waiting" style="left:510px;top:40px">revenue_report</div>
+    <div class="dag-node waiting" style="left:510px;top:90px">dashboard_summary</div>
+  </div>
+
+  <!-- Log block -->
+  <div class="section-title">
+    <span>dbt JSON log</span>
+    <span style="color:var(--muted);font-weight:400;text-transform:none;letter-spacing:0">распарсенный, не сырой</span>
+  </div>
+  <div class="log-block">
+    <span class="l-time">04:02:01</span> <span class="l-info">[INFO]</span>  Running with dbt=1.8.3<br>
+    <span class="l-time">04:02:02</span> <span class="l-info">[INFO]</span>  Found 42 models, 18 tests<br>
+    <span class="l-time">04:02:03</span> <span class="l-ok">[OK]  </span>  orders_raw &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;— 2.1s<br>
+    <span class="l-time">04:02:05</span> <span class="l-ok">[OK]  </span>  users &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;— 1.4s<br>
+    <span class="l-time">04:02:07</span> <span class="l-err">[ERROR]</span> orders_fact &nbsp;&nbsp;&nbsp;&nbsp;— Missing columns: 'user_segment' (UNKNOWN_IDENTIFIER)<br>
+    <span class="l-time">04:02:07</span> <span class="l-warn">[SKIP]</span>  revenue_report &nbsp;— upstream failed<br>
+    <span class="l-time">04:02:07</span> <span class="l-warn">[SKIP]</span>  dashboard_summary — upstream failed
+  </div>
+
+</div>
+</body>
+</html>

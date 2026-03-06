@@ -1,0 +1,533 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Style Guide — Dark Developer UI</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;500;600&family=Syne:wght@400;600;700;800&display=swap');
+
+:root {
+  --bg:     #080c14;
+  --s1:     #0d1220;
+  --s2:     #131a2e;
+  --s3:     #1a2238;
+  --border: #1e2d45;
+  --text:   #cdd9f0;
+  --muted:  #4a6080;
+  --muted2: #6a85a8;
+  --accent: #3b82f6;
+  --cyan:   #22d3ee;
+  --green:  #22c55e;
+  --purple: #a78bfa;
+  --warn:   #f59e0b;
+  --error:  #ef4444;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { font-family: 'Syne', sans-serif; background: var(--bg); color: var(--text); font-size: 14px; line-height: 1.7; }
+
+/* grid bg */
+body::before {
+  content: ''; position: fixed; inset: 0; pointer-events: none; z-index: 0;
+  background: linear-gradient(rgba(59,130,246,0.025) 1px, transparent 1px),
+              linear-gradient(90deg, rgba(59,130,246,0.025) 1px, transparent 1px);
+  background-size: 48px 48px;
+}
+
+/* ── NAV ── */
+nav {
+  border-bottom: 1px solid var(--border);
+  background: rgba(8,12,20,0.95);
+  backdrop-filter: blur(12px);
+  position: sticky; top: 0; z-index: 100;
+}
+.nav-inner {
+  max-width: 960px; margin: 0 auto; padding: 0 32px;
+  height: 50px; display: flex; align-items: center; gap: 16px;
+}
+.nav-back {
+  display: flex; align-items: center; gap: 6px;
+  color: var(--muted2); text-decoration: none; font-size: 12px; font-weight: 600;
+  transition: color 0.15s;
+}
+.nav-back:hover { color: var(--text); }
+.nav-sep { color: var(--border); }
+.nav-title { font-size: 13px; font-weight: 700; color: var(--text); }
+.nav-right { margin-left: auto; }
+.nav-badge {
+  padding: 3px 9px; border-radius: 4px; font-size: 10px; font-weight: 700;
+  font-family: 'JetBrains Mono', monospace; background: rgba(59,130,246,0.1);
+  color: var(--accent); border: 1px solid rgba(59,130,246,0.25);
+}
+
+/* ── LAYOUT ── */
+.layout { display: flex; max-width: 960px; margin: 0 auto; padding: 0 32px; position: relative; z-index: 1; min-height: calc(100vh - 50px); }
+
+/* sidebar TOC */
+.toc {
+  width: 220px; flex-shrink: 0; padding: 32px 0 32px 0;
+  position: sticky; top: 50px; height: calc(100vh - 50px); overflow-y: auto;
+}
+.toc-title { font-size: 10px; font-weight: 700; color: var(--muted); text-transform: uppercase; letter-spacing: 1.2px; margin-bottom: 10px; padding-left: 14px; }
+.toc-item {
+  display: block; padding: 5px 14px; border-radius: 5px;
+  font-size: 12px; font-weight: 600; color: var(--muted2);
+  text-decoration: none; transition: all 0.12s;
+  border-left: 2px solid transparent;
+}
+.toc-item:hover { color: var(--text); background: var(--s2); }
+.toc-item.active { color: var(--accent); border-left-color: var(--accent); background: rgba(59,130,246,0.06); }
+.toc-sub { padding-left: 26px; font-size: 11px; font-weight: 400; }
+
+/* content */
+.content { flex: 1; padding: 40px 0 80px 48px; border-left: 1px solid var(--border); min-width: 0; }
+
+/* sections */
+.section { margin-bottom: 56px; }
+.section-num { font-family: 'JetBrains Mono', monospace; font-size: 11px; font-weight: 600; color: var(--accent); letter-spacing: 0.5px; margin-bottom: 6px; }
+h1 { font-size: 36px; font-weight: 800; color: var(--text); line-height: 1.2; margin-bottom: 16px; }
+h2 { font-size: 22px; font-weight: 700; color: var(--text); margin-bottom: 12px; margin-top: 36px; padding-bottom: 10px; border-bottom: 1px solid var(--border); }
+h3 { font-size: 16px; font-weight: 700; color: var(--accent); margin-bottom: 8px; margin-top: 24px; }
+p { color: var(--muted2); margin-bottom: 14px; font-size: 14px; line-height: 1.75; font-weight: 400; }
+p strong { color: var(--text); font-weight: 600; }
+code { font-family: 'JetBrains Mono', monospace; font-size: 12px; background: var(--s2); border: 1px solid var(--border); padding: 1px 6px; border-radius: 3px; color: var(--cyan); }
+
+.divider { height: 1px; background: var(--border); margin: 32px 0; }
+
+/* color table */
+.color-table { width: 100%; border-collapse: collapse; margin-top: 12px; }
+.color-table th { text-align: left; padding: 8px 12px; font-size: 10px; font-weight: 700; color: var(--muted); text-transform: uppercase; letter-spacing: 0.8px; border-bottom: 1px solid var(--border); background: var(--s2); }
+.color-table td { padding: 10px 12px; border-bottom: 1px solid var(--border); font-size: 13px; vertical-align: middle; }
+.color-table tr:last-child td { border-bottom: none; }
+.color-table tr:hover td { background: rgba(59,130,246,0.03); }
+.color-swatch { width: 28px; height: 28px; border-radius: 6px; display: inline-block; vertical-align: middle; border: 1px solid rgba(255,255,255,0.08); }
+.color-hex { font-family: 'JetBrains Mono', monospace; font-size: 12px; color: var(--cyan); }
+.color-name { font-weight: 600; color: var(--text); }
+.color-use { color: var(--muted2); font-size: 13px; }
+
+/* font demo */
+.font-block { background: var(--s1); border: 1px solid var(--border); border-radius: 8px; padding: 24px; margin-top: 12px; }
+.font-label { font-size: 10px; font-weight: 700; color: var(--muted); text-transform: uppercase; letter-spacing: 1px; margin-bottom: 12px; }
+.font-demo-text { font-size: 28px; font-weight: 600; color: var(--text); line-height: 1.3; margin-bottom: 8px; }
+.font-meta-row { font-family: 'JetBrains Mono', monospace; font-size: 11px; color: var(--muted2); }
+.font-use-cases { margin-top: 12px; font-size: 13px; color: var(--muted2); line-height: 1.65; }
+
+/* component demos */
+.demo-block { background: var(--s1); border: 1px solid var(--border); border-radius: 8px; padding: 20px; margin-top: 12px; }
+.demo-row { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; margin-bottom: 10px; }
+.demo-row:last-child { margin-bottom: 0; }
+
+/* badges */
+.badge { display: inline-flex; align-items: center; gap: 5px; padding: 3px 9px; border-radius: 4px; font-size: 11px; font-weight: 600; font-family: 'JetBrains Mono', monospace; }
+.badge-ok   { background: rgba(34,197,94,0.12);  color: var(--green); border: 1px solid rgba(34,197,94,0.3); }
+.badge-err  { background: rgba(239,68,68,0.12);  color: var(--error); border: 1px solid rgba(239,68,68,0.3); }
+.badge-warn { background: rgba(245,158,11,0.12); color: var(--warn);  border: 1px solid rgba(245,158,11,0.3); }
+.badge-dbt  { background: rgba(167,139,250,0.12);color: var(--purple);border: 1px solid rgba(167,139,250,0.3); }
+.badge-info { background: rgba(59,130,246,0.12); color: var(--accent);border: 1px solid rgba(59,130,246,0.3); }
+.dot { width: 6px; height: 6px; border-radius: 50%; background: currentColor; }
+
+/* buttons */
+.btn { display: inline-flex; align-items: center; gap: 6px; padding: 7px 16px; border-radius: 6px; border: none; font-family: 'Syne', sans-serif; font-size: 13px; font-weight: 600; cursor: pointer; transition: all 0.15s; }
+.btn-primary { background: var(--accent); color: #fff; }
+.btn-primary:hover { background: #2563eb; }
+.btn-ghost { background: transparent; color: var(--muted2); border: 1px solid var(--border); }
+.btn-ghost:hover { color: var(--text); background: var(--s2); }
+.btn-new { background: rgba(167,139,250,0.15); color: var(--purple); border: 1px solid rgba(167,139,250,0.3); }
+.btn-danger { background: rgba(239,68,68,0.12); color: var(--error); border: 1px solid rgba(239,68,68,0.3); }
+
+/* card demo */
+.card-demo { background: var(--s1); border: 1px solid var(--border); border-radius: 8px; overflow: hidden; max-width: 340px; }
+.card-demo-header { padding: 8px 14px; border-bottom: 1px solid var(--border); background: var(--s2); font-size: 10px; font-weight: 700; color: var(--muted); text-transform: uppercase; letter-spacing: 0.9px; }
+.card-demo-body { padding: 14px; }
+
+/* spacing table */
+.spacing-table { width: 100%; border-collapse: collapse; margin-top: 12px; }
+.spacing-table th { text-align: left; padding: 7px 12px; font-size: 10px; font-weight: 700; color: var(--muted); text-transform: uppercase; letter-spacing: 0.8px; border-bottom: 1px solid var(--border); background: var(--s2); }
+.spacing-table td { padding: 9px 12px; border-bottom: 1px solid var(--border); font-size: 13px; color: var(--muted2); }
+.spacing-table td:first-child { font-family: 'JetBrains Mono', monospace; font-size: 12px; color: var(--cyan); }
+.spacing-table td:nth-child(2) { color: var(--text); font-weight: 600; }
+.spacing-table tr:last-child td { border-bottom: none; }
+
+/* products table */
+.products-table { width: 100%; border-collapse: collapse; margin-top: 12px; }
+.products-table th { text-align: left; padding: 7px 12px; font-size: 10px; font-weight: 700; color: var(--muted); text-transform: uppercase; letter-spacing: 0.8px; border-bottom: 1px solid var(--border); background: var(--s2); }
+.products-table td { padding: 10px 12px; border-bottom: 1px solid var(--border); font-size: 13px; }
+.products-table tr:last-child td { border-bottom: none; }
+.products-table tr:hover td { background: rgba(59,130,246,0.03); }
+.product-name { font-weight: 700; color: var(--text); }
+.product-desc { color: var(--muted2); }
+
+/* live dot */
+.pulse { width: 6px; height: 6px; border-radius: 50%; background: var(--green); animation: pulse 2s infinite; display: inline-block; }
+@keyframes pulse { 0%,100%{opacity:1}50%{opacity:0.2} }
+
+/* error block demo */
+.error-demo { border: 1px solid rgba(239,68,68,0.25); border-radius: 7px; overflow: hidden; }
+.error-demo-head { background: rgba(239,68,68,0.08); padding: 9px 14px; border-bottom: 1px solid rgba(239,68,68,0.2); font-size: 11px; font-weight: 700; color: var(--error); text-transform: uppercase; letter-spacing: 0.8px; }
+.error-demo-body { padding: 12px 14px; font-family: 'JetBrains Mono', monospace; font-size: 12px; line-height: 1.7; }
+.err-line { color: var(--error); }
+.err-ctx  { color: var(--muted2); }
+
+/* warn block demo */
+.warn-demo { background: rgba(245,158,11,0.06); border: 1px solid rgba(245,158,11,0.25); border-radius: 7px; padding: 14px 16px; display: flex; gap: 12px; }
+.warn-demo-body { flex: 1; }
+.warn-demo-title { font-weight: 700; color: var(--warn); font-size: 13px; margin-bottom: 4px; }
+.warn-demo-text { font-size: 12px; color: var(--muted2); line-height: 1.6; }
+.warn-demo-code { font-family: 'JetBrains Mono', monospace; font-size: 11px; background: rgba(245,158,11,0.08); padding: 7px 10px; border-radius: 5px; margin-top: 8px; color: var(--warn); }
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <div class="nav-inner">
+    <a class="nav-back" href="index.html">← Back</a>
+    <span class="nav-sep">/</span>
+    <span class="nav-title">Style Guide</span>
+    <div class="nav-right">
+      <span class="nav-badge">v1.0</span>
+    </div>
+  </div>
+</nav>
+
+<div class="layout">
+
+  <!-- TOC -->
+  <aside class="toc">
+    <div class="toc-title">Contents</div>
+    <a class="toc-item" href="#intro">Introduction</a>
+    <a class="toc-item" href="#colors">Colors</a>
+    <a class="toc-item toc-sub" href="#colors-base">Base surfaces</a>
+    <a class="toc-item toc-sub" href="#colors-semantic">Semantic</a>
+    <a class="toc-item" href="#typography">Typography</a>
+    <a class="toc-item toc-sub" href="#type-ui">UI font</a>
+    <a class="toc-item toc-sub" href="#type-mono">Mono font</a>
+    <a class="toc-item" href="#components">Components</a>
+    <a class="toc-item toc-sub" href="#comp-badge">Badges</a>
+    <a class="toc-item toc-sub" href="#comp-buttons">Buttons</a>
+    <a class="toc-item toc-sub" href="#comp-cards">Cards</a>
+    <a class="toc-item toc-sub" href="#comp-errors">Errors</a>
+    <a class="toc-item toc-sub" href="#comp-live">Live indicators</a>
+    <a class="toc-item" href="#spacing">Spacing</a>
+    <a class="toc-item" href="#principles">Principles</a>
+    <a class="toc-item" href="#inspiration">Inspiration</a>
+  </aside>
+
+  <!-- CONTENT -->
+  <div class="content">
+
+    <!-- INTRO -->
+    <div class="section" id="intro">
+      <div class="section-num">// 01</div>
+      <h1>Dark Developer UI</h1>
+      <p><strong>Dark Developer UI</strong> is a visual design system for developer-facing tools: dashboards, monitoring systems, data pipelines, CI/CD interfaces, and database explorers. Its guiding principle is <strong>information as the primary aesthetic</strong> — not decoration.</p>
+      <p>Unlike marketing-facing UI, there are no hero illustrations, gradient backgrounds, or animated onboarding screens. Instead: dense data grids, semantic color, and monospace typography used precisely where it signals meaning.</p>
+      <p>Inspiration: <strong>Linear, Vercel, Grafana, Raycast, PlanetScale, VS Code, DataGrip.</strong></p>
+    </div>
+
+    <div class="divider"></div>
+
+    <!-- COLORS -->
+    <div class="section" id="colors">
+      <div class="section-num">// 02</div>
+      <h2 id="colors-base">Color — Base Surfaces</h2>
+      <p>Depth is created through background color steps, not shadows. Each level has a defined purpose.</p>
+
+      <table class="color-table">
+        <thead>
+          <tr><th>Swatch</th><th>HEX</th><th>Name</th><th>Usage</th></tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><span class="color-swatch" style="background:#0F1117"></span></td>
+            <td><span class="color-hex">#0F1117</span></td>
+            <td><span class="color-name">Background</span></td>
+            <td><span class="color-use">Page background. The darkest layer.</span></td>
+          </tr>
+          <tr>
+            <td><span class="color-swatch" style="background:#161B27"></span></td>
+            <td><span class="color-hex">#161B27</span></td>
+            <td><span class="color-name">Surface</span></td>
+            <td><span class="color-use">Cards, panels, sidebars.</span></td>
+          </tr>
+          <tr>
+            <td><span class="color-swatch" style="background:#1E2535"></span></td>
+            <td><span class="color-hex">#1E2535</span></td>
+            <td><span class="color-name">Surface 2</span></td>
+            <td><span class="color-use">Nested blocks, inputs, code areas.</span></td>
+          </tr>
+          <tr>
+            <td><span class="color-swatch" style="background:#2A3144"></span></td>
+            <td><span class="color-hex">#2A3144</span></td>
+            <td><span class="color-name">Border</span></td>
+            <td><span class="color-use">All borders, dividers, table lines.</span></td>
+          </tr>
+          <tr>
+            <td><span class="color-swatch" style="background:#64748B"></span></td>
+            <td><span class="color-hex">#64748B</span></td>
+            <td><span class="color-name">Muted</span></td>
+            <td><span class="color-use">Secondary text, labels, metadata.</span></td>
+          </tr>
+          <tr>
+            <td><span class="color-swatch" style="background:#E2E8F0"></span></td>
+            <td><span class="color-hex">#E2E8F0</span></td>
+            <td><span class="color-name">Text</span></td>
+            <td><span class="color-use">Primary readable text.</span></td>
+          </tr>
+        </tbody>
+      </table>
+
+      <h2 id="colors-semantic">Color — Semantic States</h2>
+      <p>Color is a <strong>language of system state</strong>, not decoration. Users learn it once. Breaking the semantic mapping breaks the language. Never use accent colors for purely decorative purposes.</p>
+
+      <table class="color-table">
+        <thead>
+          <tr><th>Swatch</th><th>HEX</th><th>Name</th><th>Meaning</th></tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><span class="color-swatch" style="background:#3B82F6"></span></td>
+            <td><span class="color-hex">#3B82F6</span></td>
+            <td><span class="color-name">Primary</span></td>
+            <td><span class="color-use">Buttons, active state, links, selection.</span></td>
+          </tr>
+          <tr>
+            <td><span class="color-swatch" style="background:#22C55E"></span></td>
+            <td><span class="color-hex">#22C55E</span></td>
+            <td><span class="color-name">Success</span></td>
+            <td><span class="color-use">OK, done, online, healthy.</span></td>
+          </tr>
+          <tr>
+            <td><span class="color-swatch" style="background:#F59E0B"></span></td>
+            <td><span class="color-hex">#F59E0B</span></td>
+            <td><span class="color-name">Warning</span></td>
+            <td><span class="color-use">Degraded, manual change, approaching limit.</span></td>
+          </tr>
+          <tr>
+            <td><span class="color-swatch" style="background:#EF4444"></span></td>
+            <td><span class="color-hex">#EF4444</span></td>
+            <td><span class="color-name">Error</span></td>
+            <td><span class="color-use">Failed, down, critical. Requires attention now.</span></td>
+          </tr>
+          <tr>
+            <td><span class="color-swatch" style="background:#A78BFA"></span></td>
+            <td><span class="color-hex">#A78BFA</span></td>
+            <td><span class="color-name">New / Tag</span></td>
+            <td><span class="color-use">New features, type markers, classification.</span></td>
+          </tr>
+          <tr>
+            <td><span class="color-swatch" style="background:#22D3EE"></span></td>
+            <td><span class="color-hex">#22D3EE</span></td>
+            <td><span class="color-name">Live / Info</span></td>
+            <td><span class="color-use">Real-time data, streaming, informational.</span></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="divider"></div>
+
+    <!-- TYPOGRAPHY -->
+    <div class="section" id="typography">
+      <div class="section-num">// 03</div>
+      <h2 id="type-ui">Typography — UI Font</h2>
+      <p>Two fonts with strict, non-overlapping roles. The UI font handles all human-readable interface text. The monospace font handles all technical data.</p>
+
+      <div class="font-block" id="type-ui">
+        <div class="font-label">UI Font — IBM Plex Sans / Syne</div>
+        <div class="font-demo-text" style="font-family:'Syne',sans-serif">
+          Deploy · Monitor · Analyze
+          <br><span style="font-size:16px;font-weight:400;color:var(--muted2)">Headings, buttons, descriptions, labels</span>
+        </div>
+        <div class="font-meta-row">IBM Plex Sans · Syne · 300 / 400 / 500 / 600 / 700</div>
+        <div class="font-use-cases">
+          <strong style="color:var(--text)">Use for:</strong> all UI text — headings, descriptions, button labels, navigation, error messages, documentation prose.<br>
+          <strong style="color:var(--error)">Never use for:</strong> numbers in metrics, IDs, SQL queries, timestamps, model names, error codes.
+        </div>
+      </div>
+
+      <h2 id="type-mono">Typography — Monospace Font</h2>
+
+      <div class="font-block">
+        <div class="font-label">Monospace Font — JetBrains Mono</div>
+        <div class="font-demo-text" style="font-family:'JetBrains Mono',monospace;color:var(--cyan)">
+          48 204 331 rows · 14.2 GB
+          <br><span style="font-size:14px;font-weight:400;color:var(--muted2)">2026-03-06 04:02:11 · orders_fact · UNKNOWN_IDENTIFIER</span>
+        </div>
+        <div class="font-meta-row" style="font-family:'JetBrains Mono',monospace">JetBrains Mono · 300 / 400 / 500 / 600</div>
+        <div class="font-use-cases">
+          <strong style="color:var(--text)">Use for:</strong> row counts, file sizes, durations, IDs, SQL queries, model names, error codes, timestamps in data cells, log lines.<br>
+          <strong style="color:var(--error)">Never use for:</strong> regular UI text, button labels, descriptions.
+        </div>
+      </div>
+
+      <h3>Why this pairing matters</h3>
+      <p>Monospace fonts have equal-width characters, so numbers align in columns and code looks like code. When a user sees <code>JetBrains Mono</code> text, their brain instantly categorizes it as <em>data, not prose</em>. This visual language is learned in seconds and never forgotten.</p>
+    </div>
+
+    <div class="divider"></div>
+
+    <!-- COMPONENTS -->
+    <div class="section" id="components">
+      <div class="section-num">// 04</div>
+      <h2>Components</h2>
+
+      <h3 id="comp-badge">Badges</h3>
+      <p>Small semantic labels. Semi-transparent background + thin border. A colored dot inside signals a live or current state.</p>
+      <div class="demo-block">
+        <div class="demo-row">
+          <span class="badge badge-ok"><span class="dot"></span> success</span>
+          <span class="badge badge-err"><span class="dot"></span> failed</span>
+          <span class="badge badge-warn"><span class="dot"></span> warning</span>
+          <span class="badge badge-info">running</span>
+          <span class="badge badge-dbt">dbt model</span>
+        </div>
+        <p style="margin:10px 0 0;font-size:12px">Background: <code>color at 12% opacity</code> · Border: <code>color at 25–30% opacity</code> · Font: <code>JetBrains Mono 11px 600</code></p>
+      </div>
+
+      <h3 id="comp-buttons">Buttons</h3>
+      <p>Four button variants with strict role separation. Never use Primary for destructive actions.</p>
+      <div class="demo-block">
+        <div class="demo-row">
+          <button class="btn btn-primary">▶ Run Model</button>
+          <button class="btn btn-ghost">Export CSV</button>
+          <button class="btn btn-new">✦ New Feature</button>
+          <button class="btn btn-danger">⏹ Cancel</button>
+        </div>
+        <p style="margin:10px 0 0;font-size:12px">Radius: <code>6px</code> · Height: ~<code>32px</code> · Font: UI sans-serif 600 · Transitions: <code>0.15s</code></p>
+      </div>
+
+      <h3 id="comp-cards">Cards</h3>
+      <p>Cards use Surface color with a Border color outline. Card headers use Surface 2 as background with an UPPERCASE 10px label. No shadows — depth comes from color contrast.</p>
+      <div class="demo-block">
+        <div class="card-demo">
+          <div class="card-demo-header">Table State</div>
+          <div class="card-demo-body">
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px">
+              <div>
+                <div style="font-size:10px;color:var(--muted);margin-bottom:4px">ROWS</div>
+                <div style="font-family:'JetBrains Mono',monospace;font-size:20px;font-weight:600;color:var(--cyan)">48.2M</div>
+              </div>
+              <div>
+                <div style="font-size:10px;color:var(--muted);margin-bottom:4px">SIZE</div>
+                <div style="font-family:'JetBrains Mono',monospace;font-size:20px;font-weight:600">14.2 GB</div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <p style="margin:10px 0 0;font-size:12px">Background: <code>#161B27</code> · Border: <code>#2A3144</code> · Radius: <code>8px</code> · Header padding: <code>10px 14px</code></p>
+      </div>
+
+      <h3 id="comp-errors">Error blocks</h3>
+      <p>Errors are shown as structured blocks, not raw log output. The interface parses the error and presents: model/file, error message, SQL context. Red border at 25% opacity.</p>
+      <div class="demo-block">
+        <div class="error-demo">
+          <div class="error-demo-head">⚡ dbt compilation error · orders_fact.sql · line 47</div>
+          <div class="error-demo-body">
+            <div class="err-line">Database Error in model orders_fact</div>
+            <div class="err-ctx">  Code: 47. Missing columns: 'user_segment' (UNKNOWN_IDENTIFIER)</div>
+            <div class="err-ctx">  WHERE u.user_segment = 'premium'  ← column missing in users</div>
+          </div>
+        </div>
+      </div>
+
+      <h3>Warning blocks — manual change detection</h3>
+      <p>Yellow warning block with ⚠️ icon. Used when data diverges from the expected system state (e.g. manual database modification after a pipeline run).</p>
+      <div class="demo-block">
+        <div class="warn-demo">
+          <div style="font-size:20px;flex-shrink:0">⚠️</div>
+          <div class="warn-demo-body">
+            <div class="warn-demo-title">Manual changes detected in table</div>
+            <div class="warn-demo-text">Table <code>analytics.orders_fact</code> was modified after the last successful pipeline run.</div>
+            <div class="warn-demo-code">last run:&nbsp;&nbsp;&nbsp;&nbsp; 2026-03-05 04:02:11<br>modified:&nbsp;&nbsp;&nbsp; 2026-03-05 11:47:33 ← 7h 45m later<br>rows delta:  +1 204 outside schedule</div>
+          </div>
+        </div>
+      </div>
+
+      <h3 id="comp-live">Live indicators</h3>
+      <p>A pulsing dot with <code>animation: pulse 2s infinite</code> marks data updating in real time. Color is always Success green. Period: 2 seconds, opacity alternates 1 → 0.2.</p>
+      <div class="demo-block">
+        <div class="demo-row">
+          <span class="badge badge-ok"><span class="pulse"></span> &nbsp;live · system.tables</span>
+          <span class="badge badge-ok"><span class="pulse"></span> &nbsp;cluster online</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="divider"></div>
+
+    <!-- SPACING -->
+    <div class="section" id="spacing">
+      <div class="section-num">// 05</div>
+      <h2>Spacing & Layout</h2>
+      <p>All spacing is based on an <strong>8px grid</strong>. Data-dense interfaces use tighter values compared to consumer apps — users see more per viewport. Groups are separated by 1px dividers, not large gaps.</p>
+
+      <table class="spacing-table">
+        <thead><tr><th>Token</th><th>Value</th><th>Usage</th></tr></thead>
+        <tbody>
+          <tr><td>--space-base</td><td>8px</td><td>Base unit. All spacing multiples of 8.</td></tr>
+          <tr><td>--card-padding</td><td>14px</td><td>Card body inner padding.</td></tr>
+          <tr><td>--card-header-padding</td><td>10px 14px</td><td>Card header padding.</td></tr>
+          <tr><td>--gap-cards</td><td>16px</td><td>Gap between cards in a grid.</td></tr>
+          <tr><td>--page-padding</td><td>24px</td><td>Horizontal page padding.</td></tr>
+          <tr><td>--topbar-height</td><td>48px</td><td>Top navigation bar height.</td></tr>
+          <tr><td>--tab-height</td><td>38px</td><td>Tab bar height.</td></tr>
+          <tr><td>--radius-card</td><td>8px</td><td>Card border radius.</td></tr>
+          <tr><td>--radius-small</td><td>4–6px</td><td>Chips, inputs, small elements.</td></tr>
+          <tr><td>--radius-pill</td><td>999px</td><td>Badge / pill elements.</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="divider"></div>
+
+    <!-- PRINCIPLES -->
+    <div class="section" id="principles">
+      <div class="section-num">// 06</div>
+      <h2>Design Principles</h2>
+
+      <h3>Function over form</h3>
+      <p>Every element justifies its presence with data or an action. Remove an element — something is lost. <strong>No hero illustrations, decorative gradients, or animated backgrounds.</strong></p>
+
+      <h3>Semantic color</h3>
+      <p>Color is a language of system state. The user learns it once: red = problem. After that, they read page state in seconds without reading text. Breaking this semantic mapping breaks the language itself.</p>
+
+      <h3>Monospace as signal</h3>
+      <p><code>JetBrains Mono</code> is used not because it looks cool, but because it signals meaning: <em>this is not prose, it is data</em>. The user instantly distinguishes a model name from a description, a row count from regular text.</p>
+
+      <h3>Parsed output, not raw logs</h3>
+      <p>Instead of dumping raw command output, the interface structures it: model name, error message, SQL line. This reduces cognitive load significantly. dbt's <code>--log-format json</code> output is designed for exactly this.</p>
+
+      <h3>Hierarchy through surfaces, not shadows</h3>
+      <p>Depth is achieved via background color steps: <code>#0F1117</code> → <code>#161B27</code> → <code>#1E2535</code>. Shadows create a "soft" visual style foreign to this genre. Surface contrast is sufficient and cleaner.</p>
+
+      <h3>Data density by design</h3>
+      <p>Spacing is intentionally tighter than in consumer apps. Users of dev tools spend 8+ hours in the interface. They have context. They don't need large whitespace to orient themselves — they need <em>more data per viewport</em>.</p>
+    </div>
+
+    <div class="divider"></div>
+
+    <!-- INSPIRATION -->
+    <div class="section" id="inspiration">
+      <div class="section-num">// 07</div>
+      <h2>Products in this style</h2>
+      <table class="products-table">
+        <thead><tr><th>Product</th><th>What it does well</th></tr></thead>
+        <tbody>
+          <tr><td><span class="product-name">Linear</span></td><td><span class="product-desc">Task tracker. Reference implementation of dense dark UI with semantic colors.</span></td></tr>
+          <tr><td><span class="product-name">Vercel Dashboard</span></td><td><span class="product-desc">Deploy platform. Metric cards with live statuses, monospace values, clean tabs.</span></td></tr>
+          <tr><td><span class="product-name">Grafana</span></td><td><span class="product-desc">Monitoring. Maximum information density, pulse indicators, semantic colors at scale.</span></td></tr>
+          <tr><td><span class="product-name">Raycast</span></td><td><span class="product-desc">macOS launcher. Dark, fast, keyboard-first. Minimal and purposeful.</span></td></tr>
+          <tr><td><span class="product-name">PlanetScale</span></td><td><span class="product-desc">Database platform. Metric tables, lineage views, clear status indicators.</span></td></tr>
+          <tr><td><span class="product-name">VS Code / DataGrip</span></td><td><span class="product-desc">IDEs. The original dark developer UI — the genre's foundation.</span></td></tr>
+          <tr><td><span class="product-name">GitHub Actions</span></td><td><span class="product-desc">CI/CD. Stage visualization, log coloring, job-level status breakdown.</span></td></tr>
+        </tbody>
+      </table>
+    </div>
+
+  </div>
+</div>
+
+</body>
+</html>
