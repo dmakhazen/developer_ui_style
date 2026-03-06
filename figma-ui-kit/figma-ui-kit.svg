@@ -1,0 +1,231 @@
+<svg width="1920" height="2200" viewBox="0 0 1920 2200" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="heroGrad" x1="0" y1="0" x2="340" y2="0" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#3B82F6"/>
+      <stop offset="1" stop-color="#22D3EE"/>
+    </linearGradient>
+    <style>
+      .ui { font-family: Syne, Arial, sans-serif; }
+      .mono { font-family: 'JetBrains Mono', Consolas, monospace; }
+    </style>
+  </defs>
+
+  <rect x="0" y="0" width="1920" height="2200" fill="#080C14"/>
+
+  <rect x="40" y="40" width="1840" height="2120" rx="16" fill="#0D1220" stroke="#1E2D45"/>
+  <text x="72" y="98" class="ui" font-size="30" font-weight="800" fill="#CDD9F0">Developer UI - Figma Import Kit</text>
+  <text x="72" y="128" class="mono" font-size="14" font-weight="500" fill="#6A85A8">Drag this SVG file into Figma, then convert blocks into components and variants</text>
+
+  <rect x="72" y="160" width="1776" height="2" fill="#1E2D45"/>
+
+  <text x="72" y="214" class="mono" font-size="13" font-weight="700" fill="#3B82F6">TOKENS / COLOR</text>
+
+  <g transform="translate(72,240)">
+    <rect x="0" y="0" width="140" height="88" rx="8" fill="#080C14" stroke="#1E2D45"/>
+    <text x="14" y="24" class="mono" font-size="11" fill="#CDD9F0">bg</text>
+    <text x="14" y="68" class="mono" font-size="11" fill="#6A85A8">#080C14</text>
+
+    <rect x="156" y="0" width="140" height="88" rx="8" fill="#0D1220" stroke="#1E2D45"/>
+    <text x="170" y="24" class="mono" font-size="11" fill="#CDD9F0">surface-1</text>
+    <text x="170" y="68" class="mono" font-size="11" fill="#6A85A8">#0D1220</text>
+
+    <rect x="312" y="0" width="140" height="88" rx="8" fill="#131A2E" stroke="#1E2D45"/>
+    <text x="326" y="24" class="mono" font-size="11" fill="#CDD9F0">surface-2</text>
+    <text x="326" y="68" class="mono" font-size="11" fill="#6A85A8">#131A2E</text>
+
+    <rect x="468" y="0" width="140" height="88" rx="8" fill="#1A2238" stroke="#1E2D45"/>
+    <text x="482" y="24" class="mono" font-size="11" fill="#CDD9F0">surface-3</text>
+    <text x="482" y="68" class="mono" font-size="11" fill="#6A85A8">#1A2238</text>
+
+    <rect x="624" y="0" width="140" height="88" rx="8" fill="#1E2D45" stroke="#2A3B57"/>
+    <text x="638" y="24" class="mono" font-size="11" fill="#CDD9F0">border</text>
+    <text x="638" y="68" class="mono" font-size="11" fill="#6A85A8">#1E2D45</text>
+
+    <rect x="780" y="0" width="140" height="88" rx="8" fill="#3B82F6"/>
+    <text x="794" y="24" class="mono" font-size="11" fill="#FFFFFF">accent</text>
+    <text x="794" y="68" class="mono" font-size="11" fill="#DCEAFF">#3B82F6</text>
+
+    <rect x="936" y="0" width="140" height="88" rx="8" fill="#22D3EE"/>
+    <text x="950" y="24" class="mono" font-size="11" fill="#042733">cyan</text>
+    <text x="950" y="68" class="mono" font-size="11" fill="#0B4A58">#22D3EE</text>
+
+    <rect x="1092" y="0" width="140" height="88" rx="8" fill="#22C55E"/>
+    <text x="1106" y="24" class="mono" font-size="11" fill="#052A13">green</text>
+    <text x="1106" y="68" class="mono" font-size="11" fill="#0B4D22">#22C55E</text>
+
+    <rect x="1248" y="0" width="140" height="88" rx="8" fill="#A78BFA"/>
+    <text x="1262" y="24" class="mono" font-size="11" fill="#241B44">purple</text>
+    <text x="1262" y="68" class="mono" font-size="11" fill="#3B2A7A">#A78BFA</text>
+
+    <rect x="1404" y="0" width="140" height="88" rx="8" fill="#F59E0B"/>
+    <text x="1418" y="24" class="mono" font-size="11" fill="#3D2502">warn</text>
+    <text x="1418" y="68" class="mono" font-size="11" fill="#6A3C05">#F59E0B</text>
+
+    <rect x="1560" y="0" width="140" height="88" rx="8" fill="#EF4444"/>
+    <text x="1574" y="24" class="mono" font-size="11" fill="#430E0E">error</text>
+    <text x="1574" y="68" class="mono" font-size="11" fill="#6A1C1C">#EF4444</text>
+  </g>
+
+  <text x="72" y="378" class="mono" font-size="13" font-weight="700" fill="#3B82F6">TOKENS / TYPOGRAPHY</text>
+  <rect x="72" y="400" width="860" height="250" rx="10" fill="#131A2E" stroke="#1E2D45"/>
+  <text x="98" y="446" class="ui" font-size="48" font-weight="800" fill="url(#heroGrad)">Dark Developer UI</text>
+  <text x="98" y="486" class="ui" font-size="20" font-weight="700" fill="#CDD9F0">Syne 700 - Heading / section titles</text>
+  <text x="98" y="516" class="ui" font-size="15" font-weight="400" fill="#6A85A8">Syne 400 - Body text for interface descriptions and helper labels.</text>
+  <text x="98" y="558" class="mono" font-size="14" font-weight="600" fill="#22D3EE">JetBrains Mono 600 - 14px: 142.4s / run_id=247 / SELECT * FROM events</text>
+  <text x="98" y="592" class="mono" font-size="12" font-weight="500" fill="#4A6080">JetBrains Mono 500 - 12px: timestamps, IDs, numeric badges, logs</text>
+
+  <text x="980" y="378" class="mono" font-size="13" font-weight="700" fill="#3B82F6">TOKENS / SPACING + RADIUS</text>
+  <rect x="980" y="400" width="868" height="250" rx="10" fill="#131A2E" stroke="#1E2D45"/>
+
+  <g transform="translate(1012,434)">
+    <text x="0" y="0" class="mono" font-size="12" fill="#CDD9F0">Spacing scale:</text>
+    <rect x="0" y="14" width="4" height="4" fill="#22D3EE"/>
+    <rect x="20" y="12" width="8" height="8" fill="#22D3EE"/>
+    <rect x="44" y="10" width="12" height="12" fill="#22D3EE"/>
+    <rect x="72" y="8" width="16" height="16" fill="#22D3EE"/>
+    <rect x="104" y="6" width="20" height="20" fill="#22D3EE"/>
+    <rect x="140" y="4" width="24" height="24" fill="#22D3EE"/>
+    <rect x="180" y="0" width="32" height="32" fill="#22D3EE"/>
+    <text x="0" y="58" class="mono" font-size="11" fill="#6A85A8">4 8 12 16 20 24 32</text>
+
+    <text x="0" y="106" class="mono" font-size="12" fill="#CDD9F0">Radius scale:</text>
+    <rect x="0" y="122" width="70" height="34" rx="4" fill="#0D1220" stroke="#1E2D45"/>
+    <rect x="86" y="122" width="70" height="34" rx="6" fill="#0D1220" stroke="#1E2D45"/>
+    <rect x="172" y="122" width="70" height="34" rx="8" fill="#0D1220" stroke="#1E2D45"/>
+    <rect x="258" y="122" width="70" height="34" rx="17" fill="#0D1220" stroke="#1E2D45"/>
+    <text x="0" y="178" class="mono" font-size="11" fill="#6A85A8">r4 r6 r8 r999</text>
+
+    <text x="0" y="220" class="mono" font-size="11" fill="#A78BFA">Use 8/12/16 spacing inside components; 24/32 between sections.</text>
+  </g>
+
+  <rect x="72" y="686" width="1776" height="2" fill="#1E2D45"/>
+  <text x="72" y="740" class="mono" font-size="13" font-weight="700" fill="#3B82F6">COMPONENTS / BUTTONS</text>
+
+  <rect x="72" y="764" width="1776" height="210" rx="10" fill="#131A2E" stroke="#1E2D45"/>
+  <g transform="translate(104,804)">
+    <rect x="0" y="0" width="168" height="44" rx="8" fill="#3B82F6"/>
+    <text x="54" y="28" class="ui" font-size="15" font-weight="700" fill="#FFFFFF">Primary</text>
+
+    <rect x="188" y="0" width="168" height="44" rx="8" fill="#131A2E" stroke="#1E2D45"/>
+    <text x="246" y="28" class="ui" font-size="15" font-weight="700" fill="#6A85A8">Ghost</text>
+
+    <rect x="376" y="0" width="168" height="44" rx="8" fill="#2B1518" stroke="#7A2C34"/>
+    <text x="431" y="28" class="ui" font-size="15" font-weight="700" fill="#EF4444">Danger</text>
+
+    <rect x="564" y="0" width="168" height="44" rx="8" fill="#1B2338" stroke="#3B82F6"/>
+    <text x="609" y="28" class="ui" font-size="15" font-weight="700" fill="#8DB6FF">Primary hover</text>
+
+    <rect x="752" y="0" width="168" height="44" rx="8" fill="#101729" stroke="#1E2D45"/>
+    <text x="805" y="28" class="ui" font-size="15" font-weight="700" fill="#3E536E">Disabled</text>
+
+    <text x="0" y="88" class="mono" font-size="11" fill="#6A85A8">Create component set: Button / Type=Primary|Ghost|Danger ; State=Default|Hover|Disabled ; Size=Md</text>
+  </g>
+
+  <text x="72" y="1026" class="mono" font-size="13" font-weight="700" fill="#3B82F6">COMPONENTS / BADGES + INPUTS</text>
+  <rect x="72" y="1048" width="1776" height="246" rx="10" fill="#131A2E" stroke="#1E2D45"/>
+
+  <g transform="translate(104,1086)">
+    <rect x="0" y="0" width="106" height="30" rx="4" fill="#133523" stroke="#2D7A4A"/>
+    <circle cx="16" cy="15" r="4" fill="#22C55E"/>
+    <text x="28" y="20" class="mono" font-size="12" fill="#22C55E">ok</text>
+
+    <rect x="124" y="0" width="116" height="30" rx="4" fill="#33260E" stroke="#7E5A1A"/>
+    <circle cx="140" cy="15" r="4" fill="#F59E0B"/>
+    <text x="152" y="20" class="mono" font-size="12" fill="#F59E0B">warn</text>
+
+    <rect x="254" y="0" width="116" height="30" rx="4" fill="#3A171B" stroke="#7E2F39"/>
+    <circle cx="270" cy="15" r="4" fill="#EF4444"/>
+    <text x="282" y="20" class="mono" font-size="12" fill="#EF4444">error</text>
+
+    <rect x="384" y="0" width="112" height="30" rx="4" fill="#14253A" stroke="#2A4F7B"/>
+    <circle cx="400" cy="15" r="4" fill="#22D3EE"/>
+    <text x="412" y="20" class="mono" font-size="12" fill="#22D3EE">info</text>
+
+    <rect x="510" y="0" width="106" height="30" rx="4" fill="#2D2045" stroke="#5B4294"/>
+    <circle cx="526" cy="15" r="4" fill="#A78BFA"/>
+    <text x="538" y="20" class="mono" font-size="12" fill="#A78BFA">dbt</text>
+
+    <rect x="0" y="66" width="320" height="44" rx="8" fill="#0D1220" stroke="#1E2D45"/>
+    <text x="16" y="94" class="ui" font-size="14" fill="#4A6080">Search query...</text>
+
+    <rect x="340" y="66" width="320" height="44" rx="8" fill="#0D1220" stroke="#3B82F6"/>
+    <text x="356" y="94" class="ui" font-size="14" fill="#CDD9F0">orders_fact</text>
+
+    <rect x="680" y="66" width="320" height="44" rx="8" fill="#0D1220" stroke="#EF4444"/>
+    <text x="696" y="94" class="ui" font-size="14" fill="#EF4444">Invalid schema</text>
+
+    <text x="0" y="152" class="mono" font-size="11" fill="#6A85A8">Input variants: State=Default|Focus|Error ; Size=Md ; Theme=Dark</text>
+  </g>
+
+  <text x="72" y="1344" class="mono" font-size="13" font-weight="700" fill="#3B82F6">COMPONENTS / TOP BAR + CARD</text>
+  <rect x="72" y="1366" width="1776" height="356" rx="10" fill="#131A2E" stroke="#1E2D45"/>
+
+  <rect x="104" y="1402" width="1712" height="54" rx="8" fill="#0D1220" stroke="#1E2D45"/>
+  <text x="132" y="1435" class="mono" font-size="13" font-weight="700" fill="#CDD9F0">developer</text>
+  <text x="206" y="1435" class="mono" font-size="13" font-weight="700" fill="#3B82F6">ui</text>
+  <rect x="1462" y="1413" width="68" height="30" rx="6" fill="#1A2238" stroke="#1E2D45"/>
+  <text x="1485" y="1432" class="mono" font-size="11" font-weight="700" fill="#6A85A8">EN</text>
+  <rect x="1538" y="1413" width="68" height="30" rx="6" fill="#1E335A" stroke="#3B82F6"/>
+  <text x="1561" y="1432" class="mono" font-size="11" font-weight="700" fill="#BDD5FF">RU</text>
+  <rect x="1620" y="1413" width="166" height="30" rx="6" fill="#131A2E" stroke="#1E2D45"/>
+  <text x="1655" y="1432" class="ui" font-size="12" font-weight="700" fill="#6A85A8">GitHub</text>
+
+  <rect x="104" y="1480" width="520" height="206" rx="8" fill="#0D1220" stroke="#1E2D45"/>
+  <rect x="104" y="1480" width="520" height="44" rx="8" fill="#131A2E"/>
+  <text x="126" y="1508" class="mono" font-size="11" fill="#6A85A8">Card / Default</text>
+  <text x="126" y="1558" class="ui" font-size="22" font-weight="700" fill="#CDD9F0">ClickHouse Query Analyzer</text>
+  <text x="126" y="1590" class="ui" font-size="14" fill="#6A85A8">Slow query browser with execution timeline and stage breakdown.</text>
+  <rect x="126" y="1610" width="90" height="26" rx="4" fill="#14253A" stroke="#2A4F7B"/>
+  <text x="142" y="1627" class="mono" font-size="11" fill="#22D3EE">query</text>
+  <rect x="224" y="1610" width="90" height="26" rx="4" fill="#3A171B" stroke="#7E2F39"/>
+  <text x="240" y="1627" class="mono" font-size="11" fill="#EF4444">error</text>
+
+  <rect x="652" y="1480" width="1164" height="206" rx="8" fill="#0D1220" stroke="#1E2D45"/>
+  <rect x="652" y="1480" width="1164" height="44" rx="8" fill="#131A2E"/>
+  <text x="674" y="1508" class="mono" font-size="11" fill="#6A85A8">Card / Wide</text>
+  <text x="674" y="1558" class="ui" font-size="22" font-weight="700" fill="#CDD9F0">Airflow - dbt Integration</text>
+  <text x="674" y="1590" class="ui" font-size="14" fill="#6A85A8">Task detail view with lineage, table state, and structured error output.</text>
+  <rect x="674" y="1610" width="120" height="26" rx="4" fill="#2D2045" stroke="#5B4294"/>
+  <text x="700" y="1627" class="mono" font-size="11" fill="#A78BFA">dbt</text>
+  <rect x="802" y="1610" width="152" height="26" rx="4" fill="#14253A" stroke="#2A4F7B"/>
+  <text x="826" y="1627" class="mono" font-size="11" fill="#22D3EE">table state</text>
+
+  <rect x="72" y="1752" width="1776" height="2" fill="#1E2D45"/>
+  <text x="72" y="1808" class="mono" font-size="13" font-weight="700" fill="#3B82F6">PATTERNS / TABLE + STATUS + ERROR</text>
+  <rect x="72" y="1832" width="1776" height="290" rx="10" fill="#131A2E" stroke="#1E2D45"/>
+
+  <rect x="104" y="1868" width="930" height="218" rx="8" fill="#0D1220" stroke="#1E2D45"/>
+  <rect x="104" y="1868" width="930" height="36" rx="8" fill="#131A2E"/>
+  <text x="124" y="1892" class="mono" font-size="11" fill="#6A85A8">Table pattern</text>
+
+  <line x1="104" y1="1920" x2="1034" y2="1920" stroke="#1E2D45"/>
+  <line x1="104" y1="1960" x2="1034" y2="1960" stroke="#1E2D45"/>
+  <line x1="104" y1="2000" x2="1034" y2="2000" stroke="#1E2D45"/>
+
+  <text x="124" y="1944" class="mono" font-size="11" fill="#6A85A8">query_id</text>
+  <text x="360" y="1944" class="mono" font-size="11" fill="#6A85A8">status</text>
+  <text x="560" y="1944" class="mono" font-size="11" fill="#6A85A8">duration</text>
+  <text x="760" y="1944" class="mono" font-size="11" fill="#6A85A8">rows</text>
+
+  <text x="124" y="1984" class="mono" font-size="12" fill="#CDD9F0">q_1f9a2c</text>
+  <text x="360" y="1984" class="mono" font-size="12" fill="#EF4444">error</text>
+  <text x="560" y="1984" class="mono" font-size="12" fill="#EF4444">142.4s</text>
+  <text x="760" y="1984" class="mono" font-size="12" fill="#22D3EE">48.2M</text>
+
+  <text x="124" y="2024" class="mono" font-size="12" fill="#CDD9F0">q_2ab660</text>
+  <text x="360" y="2024" class="mono" font-size="12" fill="#F59E0B">warn</text>
+  <text x="560" y="2024" class="mono" font-size="12" fill="#F59E0B">38.1s</text>
+  <text x="760" y="2024" class="mono" font-size="12" fill="#22D3EE">11.0M</text>
+
+  <rect x="1066" y="1868" width="360" height="102" rx="8" fill="#112A1B" stroke="#2D7A4A"/>
+  <text x="1086" y="1900" class="mono" font-size="12" fill="#22C55E">Status Panel</text>
+  <text x="1086" y="1930" class="ui" font-size="15" font-weight="700" fill="#CDD9F0">System healthy: 97.8%</text>
+  <text x="1086" y="1954" class="ui" font-size="13" fill="#6A85A8">3 warnings, no critical failures</text>
+
+  <rect x="1066" y="1984" width="750" height="102" rx="8" fill="#32151A" stroke="#7E2F39"/>
+  <text x="1086" y="2015" class="mono" font-size="12" fill="#EF4444">Error Panel</text>
+  <text x="1086" y="2043" class="mono" font-size="12" fill="#CDD9F0">[ERROR] Missing column user_segment in model orders_fact</text>
+  <text x="1086" y="2066" class="mono" font-size="12" fill="#6A85A8">run_id=247  file=models/marts/orders_fact.sql  line=84</text>
+
+  <text x="72" y="2150" class="mono" font-size="12" fill="#6A85A8">Ready for Figma import. After import, select each block and create component sets with variants.</text>
+</svg>

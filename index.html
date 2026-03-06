@@ -18,9 +18,10 @@
 <meta property="og:url" content="https://dmakhazen.github.io/developer_ui_style/">
 
 <!-- Twitter Card -->
-<meta name="twitter:card" content="summary">
+<meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:title" content="Dark Developer UI — Design System">
 <meta name="twitter:description" content="Design system for developer tools. 4 HTML examples + full style guide.">
+
 <style>
 @import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;500;600;700&family=Syne:wght@400;600;700;800&display=swap');
 
@@ -260,6 +261,21 @@ nav {
 .card-footer-label { font-size: 11px; color: var(--muted2); font-weight: 600; }
 .card-arrow { color: var(--accent); font-size: 16px; transition: transform 0.15s; }
 .example-card:hover .card-arrow { transform: translateX(4px); }
+.kit-links { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 12px; }
+.kit-link {
+  display: inline-flex;
+  align-items: center;
+  padding: 5px 10px;
+  border-radius: 6px;
+  border: 1px solid rgba(59,130,246,0.28);
+  background: rgba(59,130,246,0.12);
+  color: #9bc0ff;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px;
+  font-weight: 600;
+  text-decoration: none;
+}
+.kit-link:hover { color: #cfe1ff; border-color: rgba(59,130,246,0.45); }
 
 /* ── PRINCIPLES ── */
 .principles-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; }
@@ -387,6 +403,34 @@ footer {
 <!-- EXAMPLES -->
 <div class="wrap">
   <div class="section" id="examples">
+    <div class="example-card wide" style="margin-bottom:16px">
+      <div class="card-body" style="display:flex;align-items:flex-start;gap:20px;padding:24px">
+        <div style="flex-shrink:0;width:44px;height:44px;display:flex;align-items:center;justify-content:center">
+          <svg width="28" height="42" viewBox="0 0 28 42" aria-label="Figma logo" role="img" xmlns="http://www.w3.org/2000/svg">
+            <rect x="0" y="0" width="14" height="14" rx="7" fill="#F24E1E"/>
+            <rect x="0" y="14" width="14" height="14" rx="7" fill="#A259FF"/>
+            <rect x="0" y="28" width="14" height="14" rx="7" fill="#0ACF83"/>
+            <rect x="14" y="0" width="14" height="14" rx="7" fill="#FF7262"/>
+            <rect x="14" y="14" width="14" height="14" rx="7" fill="#1ABCFE"/>
+          </svg>
+        </div>
+        <div style="flex:1;min-width:0">
+          <div class="card-title" style="font-size:18px" data-i18n-ru="Figma UI Kit (готов к импорту)">Figma UI Kit (Import-ready)</div>
+          <div class="card-desc" style="margin-bottom:8px" data-i18n-ru="Быстрый старт: 1) скачай <code>figma-ui-kit.svg</code>, 2) перетащи файл на canvas в Figma, 3) по желанию импортируй <code>design-tokens.json</code> через Tokens Studio.">Quick start: 1) download <code>figma-ui-kit.svg</code>, 2) drag it onto your Figma canvas, 3) optionally import <code>design-tokens.json</code> via Tokens Studio.</div>
+          <div class="kit-links">
+            <a class="kit-link" href="https://github.com/dmakhazen/developer_ui_style/tree/main/figma-ui-kit" target="_blank" rel="noopener noreferrer" data-i18n-ru="Папка на GitHub">GitHub folder</a>
+            <a class="kit-link" href="https://github.com/dmakhazen/developer_ui_style/blob/main/figma-ui-kit/figma-ui-kit.svg" target="_blank" rel="noopener noreferrer" data-i18n-ru="Файл для canvas (SVG)">Canvas file (SVG)</a>
+            <a class="kit-link" href="https://github.com/dmakhazen/developer_ui_style/blob/main/figma-ui-kit/design-tokens.json" target="_blank" rel="noopener noreferrer" data-i18n-ru="Токены (JSON)">Tokens (JSON)</a>
+            <a class="kit-link" href="https://github.com/dmakhazen/developer_ui_style/blob/main/figma-ui-kit/README.md" target="_blank" rel="noopener noreferrer" data-i18n-ru="Инструкция">Setup guide</a>
+          </div>
+        </div>
+      </div>
+      <div class="card-footer">
+        <span class="card-footer-label" data-i18n-ru="Перетащи SVG в Figma, затем сделай компоненты/варианты">Drag SVG into Figma, then create components/variants</span>
+        <span class="card-arrow">↗</span>
+      </div>
+    </div>
+
     <div class="section-header">
       <div class="section-label">// UI Examples</div>
       <div class="section-title" data-i18n-ru="5 Production-grade интерфейсов">5 Production-grade Interfaces</div>
@@ -777,6 +821,19 @@ footer {
 </footer>
 
 <script>
+<!-- Yandex.Metrika counter -->
+<script type="text/javascript">
+  (function(m,e,t,r,i,k,a){
+    m[i]=m[i]||function(){(m[i].a=m[i].a||[]).push(arguments)};
+    m[i].l=1*new Date();
+    for (var j = 0; j < document.scripts.length; j++) {if (document.scripts[j].src === r) { return; }}
+    k=e.createElement(t),a=e.getElementsByTagName(t)[0],k.async=1,k.src=r,a.parentNode.insertBefore(k,a)
+  })(window, document,'script','https://mc.yandex.ru/metrika/tag.js', 'ym');
+
+  ym(95890673, 'init', {webvisor:true, clickmap:true, ecommerce:"dataLayer", referrer: document.referrer, url: location.href, accurateTrackBounce:true, trackLinks:true});
+</script>
+<noscript><div><img src="https://mc.yandex.ru/watch/95890673" style="position:absolute; left:-9999px;" alt="" /></div></noscript>
+<!-- /Yandex.Metrika counter -->
 (() => {
   const key = 'developer-ui-lang-v2';
   const translatable = document.querySelectorAll('[data-i18n-ru]');

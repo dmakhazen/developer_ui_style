@@ -1,0 +1,71 @@
+{
+  "$schema": "https://tokens.studio/schemas/v1.json",
+  "core": {
+    "color": {
+      "bg": { "$type": "color", "$value": "#080c14" },
+      "surface-1": { "$type": "color", "$value": "#0d1220" },
+      "surface-2": { "$type": "color", "$value": "#131a2e" },
+      "surface-3": { "$type": "color", "$value": "#1a2238" },
+      "border": { "$type": "color", "$value": "#1e2d45" },
+      "text": { "$type": "color", "$value": "#cdd9f0" },
+      "muted": { "$type": "color", "$value": "#4a6080" },
+      "muted-2": { "$type": "color", "$value": "#6a85a8" },
+      "accent": { "$type": "color", "$value": "#3b82f6" },
+      "cyan": { "$type": "color", "$value": "#22d3ee" },
+      "green": { "$type": "color", "$value": "#22c55e" },
+      "purple": { "$type": "color", "$value": "#a78bfa" },
+      "warn": { "$type": "color", "$value": "#f59e0b" },
+      "error": { "$type": "color", "$value": "#ef4444" }
+    },
+    "font": {
+      "family-ui": { "$type": "fontFamilies", "$value": "Syne" },
+      "family-mono": { "$type": "fontFamilies", "$value": "JetBrains Mono" },
+      "size-10": { "$type": "fontSizes", "$value": "10" },
+      "size-12": { "$type": "fontSizes", "$value": "12" },
+      "size-14": { "$type": "fontSizes", "$value": "14" },
+      "size-16": { "$type": "fontSizes", "$value": "16" },
+      "size-22": { "$type": "fontSizes", "$value": "22" },
+      "size-36": { "$type": "fontSizes", "$value": "36" },
+      "weight-regular": { "$type": "fontWeights", "$value": "400" },
+      "weight-semibold": { "$type": "fontWeights", "$value": "600" },
+      "weight-bold": { "$type": "fontWeights", "$value": "700" },
+      "weight-extra": { "$type": "fontWeights", "$value": "800" },
+      "line-height-tight": { "$type": "lineHeights", "$value": "1.2" },
+      "line-height-normal": { "$type": "lineHeights", "$value": "1.6" }
+    },
+    "space": {
+      "2": { "$type": "spacing", "$value": "2" },
+      "4": { "$type": "spacing", "$value": "4" },
+      "6": { "$type": "spacing", "$value": "6" },
+      "8": { "$type": "spacing", "$value": "8" },
+      "10": { "$type": "spacing", "$value": "10" },
+      "12": { "$type": "spacing", "$value": "12" },
+      "16": { "$type": "spacing", "$value": "16" },
+      "20": { "$type": "spacing", "$value": "20" },
+      "24": { "$type": "spacing", "$value": "24" },
+      "32": { "$type": "spacing", "$value": "32" }
+    },
+    "radius": {
+      "4": { "$type": "borderRadius", "$value": "4" },
+      "6": { "$type": "borderRadius", "$value": "6" },
+      "8": { "$type": "borderRadius", "$value": "8" },
+      "999": { "$type": "borderRadius", "$value": "999" }
+    }
+  },
+  "semantic": {
+    "button": {
+      "primary-bg": { "$type": "color", "$value": "{core.color.accent}" },
+      "primary-text": { "$type": "color", "$value": "#ffffff" },
+      "ghost-bg": { "$type": "color", "$value": "{core.color.surface-2}" },
+      "ghost-text": { "$type": "color", "$value": "{core.color.muted-2}" },
+      "danger-bg": { "$type": "color", "$value": "rgba(239,68,68,0.12)" },
+      "danger-text": { "$type": "color", "$value": "{core.color.error}" }
+    },
+    "status": {
+      "ok": { "$type": "color", "$value": "{core.color.green}" },
+      "warn": { "$type": "color", "$value": "{core.color.warn}" },
+      "error": { "$type": "color", "$value": "{core.color.error}" },
+      "info": { "$type": "color", "$value": "{core.color.cyan}" }
+    }
+  }
+}
