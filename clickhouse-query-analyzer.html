@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="ru">
+<html lang="en">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -74,6 +74,27 @@ body::before {
 .topbar-sep { color: var(--border2); }
 .topbar-sub { color: var(--muted2); font-size: 12px; font-family: 'JetBrains Mono', monospace; }
 .topbar-right { margin-left: auto; display: flex; align-items: center; gap: 8px; }
+.lang-switch {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 2px;
+  border: 1px solid var(--border2);
+  border-radius: 6px;
+  background: var(--s2);
+}
+.lang-btn {
+  border: 0;
+  background: transparent;
+  color: var(--muted2);
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10px;
+  font-weight: 700;
+  padding: 4px 8px;
+  border-radius: 4px;
+  cursor: pointer;
+}
+.lang-btn.active { background: rgba(0,180,255,0.18); color: var(--text); }
 
 .chip {
   padding: 3px 9px; border-radius: 4px; font-size: 11px; font-weight: 600;
@@ -233,6 +254,35 @@ body::before {
 @keyframes pulse { 0%,100%{opacity:1} 50%{opacity:0.25} }
 
 .tag { font-size: 9px; font-weight: 700; background: var(--purple); color: #fff; padding: 1px 5px; border-radius: 3px; letter-spacing: 0.3px; }
+
+@media (max-width: 1100px) {
+  .panel-left { width: 280px; }
+  .detail { padding: 12px 14px; }
+  .stat-row { grid-template-columns: 1fr 1fr; }
+}
+
+@media (max-width: 760px) {
+  .layout { flex-direction: column; }
+  .sidebar {
+    width: 100%;
+    height: auto;
+    flex-direction: row;
+    justify-content: flex-start;
+    padding: 8px;
+    border-right: none;
+    border-bottom: 1px solid var(--border);
+    overflow-x: auto;
+  }
+  .main { min-height: calc(100vh - 58px); }
+  .topbar { height: auto; padding: 8px 10px; flex-wrap: wrap; }
+  .topbar-right { width: 100%; justify-content: flex-end; }
+  .content { flex-direction: column; }
+  .panel-left { width: 100%; border-right: none; border-bottom: 1px solid var(--border); max-height: 300px; }
+  .stat-row { grid-template-columns: 1fr; }
+  .pipeline { flex-direction: column; }
+  .stage { border-right: none; border-bottom: 1px solid var(--border); }
+  .stage:last-child { border-bottom: none; }
+}
 </style>
 </head>
 <body>
@@ -262,6 +312,10 @@ body::before {
     <span class="chip chip-ok"><span class="pulse"></span> cluster-prod online</span>
     <span class="chip chip-info">v25.8.16.34</span>
     <div class="topbar-right">
+      <div class="lang-switch" aria-label="Language switcher">
+        <button class="lang-btn" type="button" data-lang-btn="ru">RU</button>
+        <button class="lang-btn" type="button" data-lang-btn="en">ENG</button>
+      </div>
       <button class="btn btn-ghost">Export CSV</button>
       <button class="btn btn-primary">▶ Run Query</button>
     </div>
@@ -383,12 +437,12 @@ body::before {
           <div class="stat-card">
             <div class="stat-card-label">Duration</div>
             <div class="stat-card-value v-err">142.4s</div>
-            <div class="stat-card-sub">p99 этой недели: 38s</div>
+            <div class="stat-card-sub" data-i18n-ru="p99 этой недели: 38s">p99 this week: 38s</div>
           </div>
           <div class="stat-card">
             <div class="stat-card-label">Rows Read</div>
             <div class="stat-card-value v-accent">48.2M</div>
-            <div class="stat-card-sub">из 48.2M total</div>
+            <div class="stat-card-sub" data-i18n-ru="из 48.2M total">of 48.2M total</div>
           </div>
           <div class="stat-card">
             <div class="stat-card-label">Memory Peak</div>
@@ -398,7 +452,7 @@ body::before {
           <div class="stat-card">
             <div class="stat-card-label">Parts Read</div>
             <div class="stat-card-value v-err">2 841</div>
-            <div class="stat-card-sub">full scan — нет прунинга</div>
+            <div class="stat-card-sub" data-i18n-ru="full scan — нет прунинга">full scan - no pruning</div>
           </div>
           <div class="stat-card">
             <div class="stat-card-label">Thread Count</div>
@@ -424,7 +478,7 @@ body::before {
   <span class="fn">uniqExact</span><span class="punc">(</span>user_id<span class="punc">)</span>   <span class="kw">AS</span> uusers<span class="punc">,</span>
   <span class="fn">sum</span><span class="punc">(</span>revenue<span class="punc">)</span>        <span class="kw">AS</span> total_rev
 <span class="kw">FROM</span> <span class="tbl">prod.events_final</span>
-<span class="kw">WHERE</span> ym_pv_dateTime <span class="punc">&gt;=</span> <span class="str">'2026-02-01'</span>       <span class="cmt">-- ⚠ String, не partition key</span>
+<span class="kw">WHERE</span> ym_pv_dateTime <span class="punc">&gt;=</span> <span class="str">'2026-02-01'</span>       <span class="cmt" data-i18n-ru="-- ⚠ String, не partition key">-- ⚠ String, not a partition key</span>
   <span class="kw">AND</span> ym_pv_dateTime  <span class="punc">&lt;</span>  <span class="str">'2026-03-01'</span>
 <span class="kw">GROUP BY</span> month
 <span class="kw">ORDER BY</span> month
@@ -434,7 +488,7 @@ body::before {
 
         <!-- Flamegraph: execution stages -->
         <div class="section">
-          <div class="sec-head">Execution Timeline (по стейджам)</div>
+          <div class="sec-head" data-i18n-ru="Execution Timeline (по стейджам)">Execution Timeline (by stages)</div>
           <div class="sec-body">
             <div class="flame-row">
               <div class="flame-label">ReadFromMergeTree</div>
@@ -471,12 +525,12 @@ body::before {
         <div style="background:rgba(255,170,0,0.06);border:1px solid rgba(255,170,0,0.25);border-radius:7px;padding:14px 16px;display:flex;gap:12px;align-items:flex-start">
           <div style="font-size:20px;flex-shrink:0">⚠️</div>
           <div>
-            <div style="font-weight:700;color:var(--warn);font-size:13px;margin-bottom:5px">Partition pruning не работает</div>
+            <div style="font-weight:700;color:var(--warn);font-size:13px;margin-bottom:5px" data-i18n-ru="Partition pruning не работает">Partition pruning is not working</div>
             <div style="color:#94a3b8;font-size:12px;line-height:1.6">
-              Колонка <code style="font-family:'JetBrains Mono',monospace;color:var(--cyan)">ym_pv_dateTime</code> имеет тип <code style="font-family:'JetBrains Mono',monospace;color:var(--error)">String</code>, поэтому ClickHouse не может сопоставить её с partition key типа <code style="font-family:'JetBrains Mono',monospace;color:var(--success)">toYYYYMMDD(toDate(...))</code>. Прочитаны все 2841 партиций.
+              <span data-i18n-ru="Колонка ym_pv_dateTime имеет тип String, поэтому ClickHouse не может сопоставить ее с partition key toYYYYMMDD(toDate(...)). Прочитаны все 2841 партиции.">Column <code style="font-family:'JetBrains Mono',monospace;color:var(--cyan)">ym_pv_dateTime</code> has type <code style="font-family:'JetBrains Mono',monospace;color:var(--error)">String</code>, so ClickHouse cannot match it to the partition key type <code style="font-family:'JetBrains Mono',monospace;color:var(--success)">toYYYYMMDD(toDate(...))</code>. All 2841 partitions were read.</span>
             </div>
             <div style="font-family:'JetBrains Mono',monospace;font-size:11px;background:rgba(255,170,0,0.08);padding:8px 10px;border-radius:5px;margin-top:8px;color:var(--warn)">
-              Исправление: WHERE toYYYYMMDD(toDate(ym_pv_dateTime)) BETWEEN 20260201 AND 20260228
+              <span data-i18n-ru="Исправление: WHERE toYYYYMMDD(toDate(ym_pv_dateTime)) BETWEEN 20260201 AND 20260228">Fix: WHERE toYYYYMMDD(toDate(ym_pv_dateTime)) BETWEEN 20260201 AND 20260228</span>
             </div>
           </div>
         </div>
@@ -487,5 +541,34 @@ body::before {
   </div>
 </div>
 </div>
+
+<script>
+(() => {
+  const key = 'developer-ui-lang-v2';
+  const translatable = document.querySelectorAll('[data-i18n-ru]');
+  translatable.forEach((el) => {
+    if (!el.dataset.i18nEn) {
+      el.dataset.i18nEn = el.innerHTML;
+    }
+  });
+
+  const applyLanguage = (lang) => {
+    document.documentElement.lang = lang;
+    translatable.forEach((el) => {
+      el.innerHTML = lang === 'ru' ? el.dataset.i18nRu : el.dataset.i18nEn;
+    });
+    document.querySelectorAll('[data-lang-btn]').forEach((btn) => {
+      btn.classList.toggle('active', btn.dataset.langBtn === lang);
+    });
+    localStorage.setItem(key, lang);
+  };
+
+  document.querySelectorAll('[data-lang-btn]').forEach((btn) => {
+    btn.addEventListener('click', () => applyLanguage(btn.dataset.langBtn));
+  });
+
+  applyLanguage(localStorage.getItem(key) || 'en');
+})();
+</script>
 </body>
 </html>

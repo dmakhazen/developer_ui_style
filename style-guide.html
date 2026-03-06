@@ -55,6 +55,31 @@ nav {
 .nav-sep { color: var(--border); }
 .nav-title { font-size: 13px; font-weight: 700; color: var(--text); }
 .nav-right { margin-left: auto; }
+.lang-switch {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 2px;
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  background: var(--s2);
+  margin-right: 10px;
+}
+.lang-btn {
+  border: 0;
+  background: transparent;
+  color: var(--muted2);
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10px;
+  font-weight: 700;
+  padding: 4px 8px;
+  border-radius: 4px;
+  cursor: pointer;
+}
+.lang-btn.active {
+  background: rgba(59,130,246,0.2);
+  color: var(--text);
+}
 .nav-badge {
   padding: 3px 9px; border-radius: 4px; font-size: 10px; font-weight: 700;
   font-family: 'JetBrains Mono', monospace; background: rgba(59,130,246,0.1);
@@ -175,6 +200,31 @@ code { font-family: 'JetBrains Mono', monospace; font-size: 12px; background: va
 .warn-demo-title { font-weight: 700; color: var(--warn); font-size: 13px; margin-bottom: 4px; }
 .warn-demo-text { font-size: 12px; color: var(--muted2); line-height: 1.6; }
 .warn-demo-code { font-family: 'JetBrains Mono', monospace; font-size: 11px; background: rgba(245,158,11,0.08); padding: 7px 10px; border-radius: 5px; margin-top: 8px; color: var(--warn); }
+
+@media (max-width: 980px) {
+  .nav-inner { padding: 8px 16px; height: auto; flex-wrap: wrap; row-gap: 8px; }
+  .layout { padding: 0 16px; flex-direction: column; }
+  .toc {
+    width: 100%;
+    position: static;
+    height: auto;
+    padding: 16px 0;
+    border-bottom: 1px solid var(--border);
+    overflow: visible;
+  }
+  .content {
+    border-left: none;
+    padding: 24px 0 48px;
+  }
+}
+
+@media (max-width: 640px) {
+  .nav-inner { padding: 8px 12px; }
+  h1 { font-size: 28px; }
+  h2 { font-size: 18px; }
+  .demo-row { gap: 6px; }
+  .color-table, .spacing-table, .products-table { font-size: 12px; }
+}
 </style>
 </head>
 <body>
@@ -182,10 +232,14 @@ code { font-family: 'JetBrains Mono', monospace; font-size: 12px; background: va
 <!-- NAV -->
 <nav>
   <div class="nav-inner">
-    <a class="nav-back" href="index.html">← Back</a>
+    <a class="nav-back" href="index.html" data-i18n-ru="← Назад">← Back</a>
     <span class="nav-sep">/</span>
-    <span class="nav-title">Style Guide</span>
+    <span class="nav-title" data-i18n-ru="Гайд по стилю">Style Guide</span>
     <div class="nav-right">
+      <span class="lang-switch" aria-label="Language switcher">
+        <button class="lang-btn" type="button" data-lang-btn="ru">RU</button>
+        <button class="lang-btn" type="button" data-lang-btn="en">ENG</button>
+      </span>
       <span class="nav-badge">v1.0</span>
     </div>
   </div>
@@ -195,9 +249,9 @@ code { font-family: 'JetBrains Mono', monospace; font-size: 12px; background: va
 
   <!-- TOC -->
   <aside class="toc">
-    <div class="toc-title">Contents</div>
-    <a class="toc-item" href="#intro">Introduction</a>
-    <a class="toc-item" href="#colors">Colors</a>
+    <div class="toc-title" data-i18n-ru="Содержание">Contents</div>
+    <a class="toc-item" href="#intro" data-i18n-ru="Введение">Introduction</a>
+    <a class="toc-item" href="#colors" data-i18n-ru="Цвета">Colors</a>
     <a class="toc-item toc-sub" href="#colors-base">Base surfaces</a>
     <a class="toc-item toc-sub" href="#colors-semantic">Semantic</a>
     <a class="toc-item" href="#typography">Typography</a>
@@ -220,7 +274,7 @@ code { font-family: 'JetBrains Mono', monospace; font-size: 12px; background: va
     <!-- INTRO -->
     <div class="section" id="intro">
       <div class="section-num">// 01</div>
-      <h1>Dark Developer UI</h1>
+      <h1 data-i18n-ru="Dark Developer UI">Dark Developer UI</h1>
       <p><strong>Dark Developer UI</strong> is a visual design system for developer-facing tools: dashboards, monitoring systems, data pipelines, CI/CD interfaces, and database explorers. Its guiding principle is <strong>information as the primary aesthetic</strong> — not decoration.</p>
       <p>Unlike marketing-facing UI, there are no hero illustrations, gradient backgrounds, or animated onboarding screens. Instead: dense data grids, semantic color, and monospace typography used precisely where it signals meaning.</p>
       <p>Inspiration: <strong>Linear, Vercel, Grafana, Raycast, PlanetScale, VS Code, DataGrip.</strong></p>
@@ -371,7 +425,7 @@ code { font-family: 'JetBrains Mono', monospace; font-size: 12px; background: va
     <!-- COMPONENTS -->
     <div class="section" id="components">
       <div class="section-num">// 04</div>
-      <h2>Components</h2>
+      <h2 data-i18n-ru="Компоненты">Components</h2>
 
       <h3 id="comp-badge">Badges</h3>
       <p>Small semantic labels. Semi-transparent background + thin border. A colored dot inside signals a live or current state.</p>
@@ -460,7 +514,7 @@ code { font-family: 'JetBrains Mono', monospace; font-size: 12px; background: va
     <!-- SPACING -->
     <div class="section" id="spacing">
       <div class="section-num">// 05</div>
-      <h2>Spacing & Layout</h2>
+      <h2 data-i18n-ru="Отступы и layout">Spacing & Layout</h2>
       <p>All spacing is based on an <strong>8px grid</strong>. Data-dense interfaces use tighter values compared to consumer apps — users see more per viewport. Groups are separated by 1px dividers, not large gaps.</p>
 
       <table class="spacing-table">
@@ -485,7 +539,7 @@ code { font-family: 'JetBrains Mono', monospace; font-size: 12px; background: va
     <!-- PRINCIPLES -->
     <div class="section" id="principles">
       <div class="section-num">// 06</div>
-      <h2>Design Principles</h2>
+      <h2 data-i18n-ru="Принципы дизайна">Design Principles</h2>
 
       <h3>Function over form</h3>
       <p>Every element justifies its presence with data or an action. Remove an element — something is lost. <strong>No hero illustrations, decorative gradients, or animated backgrounds.</strong></p>
@@ -511,7 +565,7 @@ code { font-family: 'JetBrains Mono', monospace; font-size: 12px; background: va
     <!-- INSPIRATION -->
     <div class="section" id="inspiration">
       <div class="section-num">// 07</div>
-      <h2>Products in this style</h2>
+      <h2 data-i18n-ru="Продукты в этом стиле">Products in this style</h2>
       <table class="products-table">
         <thead><tr><th>Product</th><th>What it does well</th></tr></thead>
         <tbody>
@@ -528,6 +582,35 @@ code { font-family: 'JetBrains Mono', monospace; font-size: 12px; background: va
 
   </div>
 </div>
+
+<script>
+(() => {
+  const key = 'developer-ui-lang-v2';
+  const translatable = document.querySelectorAll('[data-i18n-ru]');
+  translatable.forEach((el) => {
+    if (!el.dataset.i18nEn) {
+      el.dataset.i18nEn = el.innerHTML;
+    }
+  });
+
+  const applyLanguage = (lang) => {
+    document.documentElement.lang = lang;
+    translatable.forEach((el) => {
+      el.innerHTML = lang === 'ru' ? el.dataset.i18nRu : el.dataset.i18nEn;
+    });
+    document.querySelectorAll('[data-lang-btn]').forEach((btn) => {
+      btn.classList.toggle('active', btn.dataset.langBtn === lang);
+    });
+    localStorage.setItem(key, lang);
+  };
+
+  document.querySelectorAll('[data-lang-btn]').forEach((btn) => {
+    btn.addEventListener('click', () => applyLanguage(btn.dataset.langBtn));
+  });
+
+  applyLanguage(localStorage.getItem(key) || 'en');
+})();
+</script>
 
 </body>
 </html>

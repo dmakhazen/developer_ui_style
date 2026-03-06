@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="ru">
+<html lang="en">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -44,6 +44,27 @@ body { font-family: 'DM Sans', sans-serif; background: var(--bg); color: var(--t
 .nav-item:hover { color: var(--text); background: var(--s2); }
 .nav-item.active { color: var(--text); background: rgba(0,230,118,0.08); }
 .header-right { margin-left: auto; display: flex; align-items: center; gap: 10px; }
+.lang-switch {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 2px;
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  background: var(--s2);
+}
+.lang-btn {
+  border: 0;
+  background: transparent;
+  color: var(--muted2);
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10px;
+  font-weight: 700;
+  padding: 4px 8px;
+  border-radius: 4px;
+  cursor: pointer;
+}
+.lang-btn.active { background: rgba(64,196,255,0.2); color: var(--text); }
 
 .header-meta {
   display: flex; align-items: center; gap: 24px; padding: 8px 0; border-top: 1px solid var(--border); font-size: 12px;
@@ -170,6 +191,24 @@ body { font-family: 'DM Sans', sans-serif; background: var(--bg); color: var(--t
 
 .pulse-blue { width:7px;height:7px;border-radius:50%;background:var(--blue);animation:pulse 1.5s infinite;display:inline-block; }
 @keyframes pulse{0%,100%{opacity:1}50%{opacity:0.2}}
+
+@media (max-width: 1100px) {
+  .header { padding: 0 14px; }
+  .header-top { height: auto; padding: 10px 0; flex-wrap: wrap; }
+  .header-nav { order: 3; width: 100%; margin-left: 0; flex-wrap: wrap; }
+  .body { height: auto; min-height: calc(100vh - 100px); }
+  .runs-panel { width: 240px; }
+  .stat-strip { grid-template-columns: 1fr 1fr; }
+  .stages { overflow-x: auto; padding-bottom: 6px; }
+}
+
+@media (max-width: 760px) {
+  .body { flex-direction: column; }
+  .runs-panel { width: 100%; border-right: none; border-bottom: 1px solid var(--border); max-height: 300px; }
+  .detail { padding: 12px; }
+  .stat-strip { grid-template-columns: 1fr; }
+  .job-row { flex-wrap: wrap; }
+}
 </style>
 </head>
 <body>
@@ -185,6 +224,10 @@ body { font-family: 'DM Sans', sans-serif; background: var(--bg); color: var(--t
       <div class="nav-item">Settings</div>
     </nav>
     <div class="header-right">
+      <div class="lang-switch" aria-label="Language switcher">
+        <button class="lang-btn" type="button" data-lang-btn="ru">RU</button>
+        <button class="lang-btn" type="button" data-lang-btn="en">ENG</button>
+      </div>
       <button class="btn btn-danger">⏹ Cancel Run</button>
       <button class="btn btn-primary">↺ Re-run</button>
     </div>
@@ -262,7 +305,7 @@ body { font-family: 'DM Sans', sans-serif; background: var(--bg); color: var(--t
       <div class="stat-box">
         <div class="stat-label">Artifacts</div>
         <div class="stat-val" style="color:var(--muted2)">—</div>
-        <div class="stat-sub">сборка не дошла</div>
+        <div class="stat-sub" data-i18n-ru="сборка не дошла">build did not reach this stage</div>
       </div>
     </div>
 
@@ -270,7 +313,7 @@ body { font-family: 'DM Sans', sans-serif; background: var(--bg); color: var(--t
     <div class="pipeline-wrap">
       <div class="pipeline-head">
         Pipeline Stages
-        <span style="font-size:10px;color:var(--muted2);font-weight:400;text-transform:none;letter-spacing:0">упало на стадии dbt-test</span>
+        <span style="font-size:10px;color:var(--muted2);font-weight:400;text-transform:none;letter-spacing:0" data-i18n-ru="упало на стадии dbt-test">failed at dbt-test stage</span>
       </div>
       <div class="pipeline-body">
         <div class="stages">
@@ -387,7 +430,7 @@ body { font-family: 'DM Sans', sans-serif; background: var(--bg); color: var(--t
     <!-- failed test log -->
     <div class="pipeline-wrap">
       <div class="pipeline-head">
-        dbt-test — вывод (5 failed)
+        <span data-i18n-ru="dbt-test — вывод (5 failed)">dbt-test — output (5 failed)</span>
         <button class="btn btn-ghost" style="font-size:10px;padding:3px 8px">Full Log</button>
       </div>
       <div style="padding:12px 14px">
@@ -410,5 +453,34 @@ body { font-family: 'DM Sans', sans-serif; background: var(--bg); color: var(--t
   </div>
 
 </div>
+
+<script>
+(() => {
+  const key = 'developer-ui-lang-v2';
+  const translatable = document.querySelectorAll('[data-i18n-ru]');
+  translatable.forEach((el) => {
+    if (!el.dataset.i18nEn) {
+      el.dataset.i18nEn = el.innerHTML;
+    }
+  });
+
+  const applyLanguage = (lang) => {
+    document.documentElement.lang = lang;
+    translatable.forEach((el) => {
+      el.innerHTML = lang === 'ru' ? el.dataset.i18nRu : el.dataset.i18nEn;
+    });
+    document.querySelectorAll('[data-lang-btn]').forEach((btn) => {
+      btn.classList.toggle('active', btn.dataset.langBtn === lang);
+    });
+    localStorage.setItem(key, lang);
+  };
+
+  document.querySelectorAll('[data-lang-btn]').forEach((btn) => {
+    btn.addEventListener('click', () => applyLanguage(btn.dataset.langBtn));
+  });
+
+  applyLanguage(localStorage.getItem(key) || 'en');
+})();
+</script>
 </body>
 </html>

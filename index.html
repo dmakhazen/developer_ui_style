@@ -11,7 +11,7 @@
 <meta name="author" content="Dark Developer UI">
 <link rel="canonical" href="https://dmakhazen.github.io/developer_ui_style/">
 
-<!-- Open Graph (отображение при шаринге в Slack, Telegram, Twitter) -->
+<!-- Open Graph (display in Slack, Telegram, Twitter previews) -->
 <meta property="og:title" content="Dark Developer UI — Design System">
 <meta property="og:description" content="Design system for developer tools. 4 HTML examples + full style guide. Airflow, ClickHouse, CI/CD, Kubernetes.">
 <meta property="og:type" content="website">
@@ -86,6 +86,30 @@ nav {
 }
 .nav-link:hover { color: var(--text); background: var(--s2); }
 .nav-right { margin-left: auto; display: flex; align-items: center; gap: 10px; }
+.lang-switch {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 2px;
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  background: var(--s2);
+}
+.lang-btn {
+  border: 0;
+  background: transparent;
+  color: var(--muted2);
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10px;
+  font-weight: 700;
+  padding: 4px 8px;
+  border-radius: 4px;
+  cursor: pointer;
+}
+.lang-btn.active {
+  background: rgba(59,130,246,0.2);
+  color: var(--text);
+}
 .nav-badge {
   padding: 3px 9px; border-radius: 4px; font-size: 10px; font-weight: 700;
   font-family: 'JetBrains Mono', monospace; letter-spacing: 0.3px;
@@ -289,6 +313,30 @@ footer {
 /* pulse */
 .pulse { width: 6px; height: 6px; border-radius: 50%; background: var(--green); animation: pulse 2s infinite; display: inline-block; }
 @keyframes pulse { 0%,100%{opacity:1}50%{opacity:0.2} }
+
+@media (max-width: 980px) {
+  .wrap { padding: 0 16px; }
+  .nav-inner { padding: 8px 16px; height: auto; flex-wrap: wrap; row-gap: 8px; }
+  .nav-links { order: 3; width: 100%; margin-left: 0; }
+  .nav-right { margin-left: 0; margin-left: auto; }
+  .hero { padding: 48px 0 40px; }
+  .hero-title { font-size: 40px; }
+  .examples-grid { grid-template-columns: 1fr; }
+  .example-card.wide { grid-column: span 1; }
+  .principles-grid { grid-template-columns: 1fr 1fr; }
+  .fonts-row { grid-template-columns: 1fr; }
+  .palette { flex-wrap: wrap; }
+  .swatch { min-width: 25%; }
+}
+
+@media (max-width: 640px) {
+  .hero-title { font-size: 32px; }
+  .hero-sub { font-size: 14px; }
+  .section { padding: 40px 0; }
+  .principles-grid { grid-template-columns: 1fr; }
+  .card-preview { height: 160px; }
+  .card-body { padding: 14px; }
+}
 </style>
 </head>
 <body>
@@ -298,11 +346,15 @@ footer {
   <div class="nav-inner">
     <a class="nav-logo" href="index.html">dark<span>dev</span>.ui</a>
     <div class="nav-links">
-      <a class="nav-link" href="#examples">Examples</a>
-      <a class="nav-link" href="#principles">Principles</a>
-      <a class="nav-link" href="style-guide.html">Style Guide</a>
+      <a class="nav-link" href="#examples" data-i18n-ru="Примеры">Examples</a>
+      <a class="nav-link" href="#principles" data-i18n-ru="Принципы">Principles</a>
+      <a class="nav-link" href="style-guide.html" data-i18n-ru="Гайд по стилю">Style Guide</a>
     </div>
     <div class="nav-right">
+      <div class="lang-switch" aria-label="Language switcher">
+        <button class="lang-btn" type="button" data-lang-btn="ru">RU</button>
+        <button class="lang-btn" type="button" data-lang-btn="en">ENG</button>
+      </div>
       <span class="nav-badge">v1.0</span>
       <a class="github-btn" href="https://github.com" target="_blank">
         ★ GitHub
@@ -314,18 +366,18 @@ footer {
 <!-- HERO -->
 <div class="wrap">
   <div class="hero">
-    <div class="hero-tag"><span class="pulse"></span> &nbsp;Developer Tooling Aesthetic</div>
+    <div class="hero-tag" data-i18n-ru="<span class='pulse'></span> &nbsp;Эстетика Developer Tools"><span class="pulse"></span> &nbsp;Developer Tooling Aesthetic</div>
     <h1 class="hero-title">
       <span class="line1">Dark Developer UI</span>
       <span class="line2">Design System</span>
     </h1>
-    <p class="hero-sub">
+    <p class="hero-sub" data-i18n-ru="Визуальный язык для developer tools. Плотно, семантично и функционально; вдохновлено Linear, Vercel, Grafana и Raycast.">
       A visual language for developer tools. Dense, semantic, and functional —
       inspired by Linear, Vercel, Grafana, and Raycast.
     </p>
     <div class="hero-actions">
-      <a class="btn-hero-primary" href="#examples">Browse Examples →</a>
-      <a class="btn-hero-ghost" href="style-guide.html">Read Style Guide</a>
+      <a class="btn-hero-primary" href="#examples" data-i18n-ru="Смотреть примеры →">Browse Examples →</a>
+      <a class="btn-hero-ghost" href="style-guide.html" data-i18n-ru="Читать style guide">Read Style Guide</a>
     </div>
   </div>
 </div>
@@ -337,8 +389,8 @@ footer {
   <div class="section" id="examples">
     <div class="section-header">
       <div class="section-label">// UI Examples</div>
-      <div class="section-title">5 Production-grade Interfaces</div>
-      <div class="section-sub">Each example applies the same design system to a different developer tool context.</div>
+      <div class="section-title" data-i18n-ru="5 Production-grade интерфейсов">5 Production-grade Interfaces</div>
+      <div class="section-sub" data-i18n-ru="Каждый пример применяет один и тот же design system в разных контекстах developer tools.">Each example applies the same design system to a different developer tool context.</div>
     </div>
 
     <div class="examples-grid">
@@ -586,7 +638,6 @@ footer {
         </div>
       </a>
 
-      <!-- Style guide card -->
       <a class="example-card wide" href="style-guide.html">
         <div class="card-body" style="display:flex;align-items:center;gap:24px;padding:24px">
           <div style="font-size:48px;flex-shrink:0">📐</div>
@@ -608,39 +659,39 @@ footer {
 <div class="wrap">
   <div class="section" id="principles">
     <div class="section-header">
-      <div class="section-label">// Design Principles</div>
-      <div class="section-title">What makes this style</div>
+      <div class="section-label" data-i18n-ru="// Принципы дизайна">// Design Principles</div>
+      <div class="section-title" data-i18n-ru="Что формирует этот стиль">What makes this style</div>
     </div>
     <div class="principles-grid">
       <div class="principle">
         <div class="principle-icon">🎨</div>
-        <div class="principle-title">Semantic Color</div>
-        <div class="principle-desc">Color is a language, not decoration. Red = error. Yellow = warning. Green = success. Users learn it once and read page state in seconds without reading text.</div>
+        <div class="principle-title" data-i18n-ru="Семантический цвет">Semantic Color</div>
+        <div class="principle-desc" data-i18n-ru="Цвет - это язык, а не декор. Red = error. Yellow = warning. Green = success. Пользователь запоминает это один раз и читает состояние экрана за секунды.">Color is a language, not decoration. Red = error. Yellow = warning. Green = success. Users learn it once and read page state in seconds without reading text.</div>
       </div>
       <div class="principle">
         <div class="principle-icon">𝙼</div>
-        <div class="principle-title">Monospace as Signal</div>
-        <div class="principle-desc">JetBrains Mono is used only for technical values — numbers, IDs, SQL, timestamps. Its presence signals: "this is data, not prose." Mixed with a sans-serif UI font for clear hierarchy.</div>
+        <div class="principle-title" data-i18n-ru="Monospace как сигнал">Monospace as Signal</div>
+        <div class="principle-desc" data-i18n-ru="JetBrains Mono используется только для технических значений: numbers, IDs, SQL, timestamps. Его появление означает: 'это данные, а не текст'.">JetBrains Mono is used only for technical values - numbers, IDs, SQL, timestamps. Its presence signals: "this is data, not prose." Mixed with a sans-serif UI font for clear hierarchy.</div>
       </div>
       <div class="principle">
         <div class="principle-icon">▦</div>
-        <div class="principle-title">Data Density</div>
-        <div class="principle-desc">No decorative white space. Information is dense but not chaotic — semantic groups are separated by 1px dividers, not large gaps. Users see more per viewport.</div>
+        <div class="principle-title" data-i18n-ru="Плотность данных">Data Density</div>
+        <div class="principle-desc" data-i18n-ru="Без декоративного воздуха. Интерфейс плотный, но не хаотичный: группы разделены тонкими 1px line, а не большими пустотами.">No decorative white space. Information is dense but not chaotic - semantic groups are separated by 1px dividers, not large gaps. Users see more per viewport.</div>
       </div>
       <div class="principle">
         <div class="principle-icon">◧</div>
-        <div class="principle-title">Surface Hierarchy</div>
-        <div class="principle-desc">Depth is achieved through background color steps: #0F1117 → #161B27 → #1E2535. No box shadows needed — the layers are visible through contrast alone.</div>
+        <div class="principle-title" data-i18n-ru="Иерархия поверхностей">Surface Hierarchy</div>
+        <div class="principle-desc" data-i18n-ru="Глубина строится шагами фона: #0F1117 → #161B27 → #1E2535. Тени не нужны, слои читаются за счет контраста.">Depth is achieved through background color steps: #0F1117 -> #161B27 -> #1E2535. No box shadows needed - the layers are visible through contrast alone.</div>
       </div>
       <div class="principle">
         <div class="principle-icon">✦</div>
-        <div class="principle-title">Function over Form</div>
-        <div class="principle-desc">Every element justifies its existence with data or an action. Remove it — something is lost. No hero illustrations, no onboarding animations, no decorative gradients.</div>
+        <div class="principle-title" data-i18n-ru="Функция важнее формы">Function over Form</div>
+        <div class="principle-desc" data-i18n-ru="Каждый элемент должен давать данные или действие. Убери его - теряется смысл. Без декоративных gradient и лишней анимации.">Every element justifies its existence with data or an action. Remove it - something is lost. No hero illustrations, no onboarding animations, no decorative gradients.</div>
       </div>
       <div class="principle">
         <div class="principle-icon">⚙</div>
-        <div class="principle-title">Parsed, not Raw</div>
-        <div class="principle-desc">Instead of dumping raw log output, the interface structures information: model name, error message, SQL line. Cognitive load drops significantly.</div>
+        <div class="principle-title" data-i18n-ru="Parsed, а не raw">Parsed, not Raw</div>
+        <div class="principle-desc" data-i18n-ru="Вместо сырых логов интерфейс структурирует данные: model name, error message, SQL line. Когнитивная нагрузка заметно ниже.">Instead of dumping raw log output, the interface structures information: model name, error message, SQL line. Cognitive load drops significantly.</div>
       </div>
     </div>
   </div>
@@ -719,11 +770,40 @@ footer {
 <footer>
   <div class="wrap">
     <div class="footer-text">
-      Dark Developer UI · Design System &nbsp;·&nbsp;
+      <span data-i18n-ru="Dark Developer UI · Design System">Dark Developer UI · Design System</span> &nbsp;·&nbsp;
       Inspired by <a href="#">Linear</a>, <a href="#">Vercel</a>, <a href="#">Grafana</a>, <a href="#">Raycast</a>
     </div>
   </div>
 </footer>
+
+<script>
+(() => {
+  const key = 'developer-ui-lang-v2';
+  const translatable = document.querySelectorAll('[data-i18n-ru]');
+  translatable.forEach((el) => {
+    if (!el.dataset.i18nEn) {
+      el.dataset.i18nEn = el.innerHTML;
+    }
+  });
+
+  const applyLanguage = (lang) => {
+    document.documentElement.lang = lang;
+    translatable.forEach((el) => {
+      el.innerHTML = lang === 'ru' ? el.dataset.i18nRu : el.dataset.i18nEn;
+    });
+    document.querySelectorAll('[data-lang-btn]').forEach((btn) => {
+      btn.classList.toggle('active', btn.dataset.langBtn === lang);
+    });
+    localStorage.setItem(key, lang);
+  };
+
+  document.querySelectorAll('[data-lang-btn]').forEach((btn) => {
+    btn.addEventListener('click', () => applyLanguage(btn.dataset.langBtn));
+  });
+
+  applyLanguage(localStorage.getItem(key) || 'en');
+})();
+</script>
 
 </body>
 </html>

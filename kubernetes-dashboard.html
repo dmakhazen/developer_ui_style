@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="ru">
+<html lang="en">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -93,6 +93,27 @@ body::before {
 }
 .topbar-ns span { color: var(--cyan); font-family: 'JetBrains Mono', monospace; }
 .topbar-right { margin-left: auto; display: flex; gap: 8px; align-items: center; }
+.lang-switch {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 2px;
+  border: 1px solid var(--border2);
+  border-radius: 6px;
+  background: var(--s2);
+}
+.lang-btn {
+  border: 0;
+  background: transparent;
+  color: var(--muted2);
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10px;
+  font-weight: 700;
+  padding: 4px 8px;
+  border-radius: 4px;
+  cursor: pointer;
+}
+.lang-btn.active { background: rgba(108,143,255,0.2); color: var(--text); }
 
 .btn { display:inline-flex;align-items:center;gap:5px;padding:5px 12px;border-radius:5px;border:none;font-family:'Rajdhani',sans-serif;font-size:12px;font-weight:600;cursor:pointer;transition:all 0.12s;letter-spacing:0.3px; }
 .btn-primary { background: var(--blue); color: #fff; }
@@ -180,6 +201,26 @@ tbody tr:last-child td { border-bottom: none; }
 
 .pulse { width: 6px; height: 6px; border-radius: 50%; background: var(--green); animation: pulse 2s infinite; display: inline-block; }
 @keyframes pulse { 0%,100%{opacity:1}50%{opacity:0.2} }
+
+@media (max-width: 1100px) {
+  .sidebar { width: 170px; }
+  .nodes-row { grid-template-columns: 1fr 1fr; }
+}
+
+@media (max-width: 760px) {
+  .app { flex-direction: column; }
+  .sidebar {
+    width: 100%;
+    border-right: none;
+    border-bottom: 1px solid var(--border);
+  }
+  .topbar { height: auto; padding: 8px 10px; flex-wrap: wrap; }
+  .topbar-right { width: 100%; justify-content: flex-end; }
+  .content { padding: 12px; }
+  .nodes-row { grid-template-columns: 1fr; }
+  table { min-width: 760px; }
+  .pods-table-wrap { overflow-x: auto; }
+}
 </style>
 </head>
 <body>
@@ -217,8 +258,12 @@ tbody tr:last-child td { border-bottom: none; }
   <!-- TOPBAR -->
   <div class="topbar">
     <div class="topbar-ns">ns: <span>data-platform</span></div>
-    <span class="badge badge-ok"><span class="pulse"></span> 3 nodes ready</span>
+      <span class="badge badge-ok" data-i18n-ru="<span class='pulse'></span> 3 ноды ready"><span class="pulse"></span> 3 nodes ready</span>
     <div class="topbar-right">
+        <div class="lang-switch" aria-label="Language switcher">
+          <button class="lang-btn" type="button" data-lang-btn="ru">RU</button>
+          <button class="lang-btn" type="button" data-lang-btn="en">ENG</button>
+        </div>
       <button class="btn btn-ghost">⬇ kubectl apply</button>
       <button class="btn btn-primary">+ New Deployment</button>
     </div>
@@ -227,7 +272,7 @@ tbody tr:last-child td { border-bottom: none; }
   <div class="content">
 
     <!-- NODES -->
-    <div class="section-title">Nodes</div>
+    <div class="section-title" data-i18n-ru="Ноды">Nodes</div>
     <div class="nodes-row">
 
       <div class="node-card">
@@ -316,7 +361,7 @@ tbody tr:last-child td { border-bottom: none; }
     <!-- PODS TABLE -->
     <div class="pods-table-wrap">
       <div class="table-head">
-        Pods — namespace: data-platform
+        <span data-i18n-ru="Pods — namespace: data-platform">Pods — namespace: data-platform</span>
         <div style="display:flex;gap:6px">
           <span class="badge badge-ok">94 running</span>
           <span class="badge badge-err">3 error</span>
@@ -422,10 +467,10 @@ tbody tr:last-child td { border-bottom: none; }
     </div>
 
     <!-- EVENTS -->
-    <div class="section-title">Recent Events</div>
+    <div class="section-title" data-i18n-ru="Последние события">Recent Events</div>
     <div class="events">
       <div class="table-head">
-        Cluster Events
+        <span data-i18n-ru="События кластера">Cluster Events</span>
         <span class="badge badge-err">2 Warning</span>
       </div>
 
@@ -474,5 +519,34 @@ tbody tr:last-child td { border-bottom: none; }
   </div>
 </div>
 </div>
+
+<script>
+(() => {
+  const key = 'developer-ui-lang-v2';
+  const translatable = document.querySelectorAll('[data-i18n-ru]');
+  translatable.forEach((el) => {
+    if (!el.dataset.i18nEn) {
+      el.dataset.i18nEn = el.innerHTML;
+    }
+  });
+
+  const applyLanguage = (lang) => {
+    document.documentElement.lang = lang;
+    translatable.forEach((el) => {
+      el.innerHTML = lang === 'ru' ? el.dataset.i18nRu : el.dataset.i18nEn;
+    });
+    document.querySelectorAll('[data-lang-btn]').forEach((btn) => {
+      btn.classList.toggle('active', btn.dataset.langBtn === lang);
+    });
+    localStorage.setItem(key, lang);
+  };
+
+  document.querySelectorAll('[data-lang-btn]').forEach((btn) => {
+    btn.addEventListener('click', () => applyLanguage(btn.dataset.langBtn));
+  });
+
+  applyLanguage(localStorage.getItem(key) || 'en');
+})();
+</script>
 </body>
 </html>
