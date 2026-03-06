@@ -276,6 +276,46 @@ nav {
   text-decoration: none;
 }
 .kit-link:hover { color: #cfe1ff; border-color: rgba(59,130,246,0.45); }
+.prompt-box {
+  margin-bottom: 16px;
+  background: linear-gradient(135deg, rgba(13,18,32,1) 0%, rgba(19,26,46,1) 100%);
+}
+.prompt-code {
+  margin-top: 10px;
+  padding: 12px 14px;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  background: #0a111d;
+  color: #9bc0ff;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 12px;
+  line-height: 1.55;
+  white-space: pre-wrap;
+}
+.prompt-actions {
+  margin-top: 10px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.prompt-copy-btn {
+  border: 1px solid rgba(34,211,238,0.35);
+  background: rgba(34,211,238,0.12);
+  color: #8be9ff;
+  border-radius: 6px;
+  padding: 6px 12px;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px;
+  font-weight: 700;
+  cursor: pointer;
+}
+.prompt-copy-btn:hover { border-color: rgba(34,211,238,0.55); color: #c9f7ff; }
+.prompt-status {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px;
+  color: var(--green);
+  min-height: 14px;
+}
 
 /* ── PRINCIPLES ── */
 .principles-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; }
@@ -392,7 +432,7 @@ footer {
       inspired by Linear, Vercel, Grafana, and Raycast.
     </p>
     <div class="hero-actions">
-      <a class="btn-hero-primary" href="#examples" data-i18n-ru="Смотреть примеры →">Browse Examples →</a>
+      <a class="btn-hero-primary" href="#examples-list" data-i18n-ru="Смотреть примеры →">Browse Examples →</a>
       <a class="btn-hero-ghost" href="style-guide.html" data-i18n-ru="Читать style guide">Read Style Guide</a>
     </div>
   </div>
@@ -431,7 +471,22 @@ footer {
       </div>
     </div>
 
-    <div class="section-header">
+    <div class="example-card wide prompt-box">
+      <div class="card-body" style="padding:22px 24px">
+        <div class="card-title" style="font-size:18px" data-i18n-ru="Скопируй промт">Copy Prompt</div>
+        <div class="card-desc" style="margin-bottom:0" data-i18n-ru="Вставь этот текст в AI/документацию, чтобы быстро объяснить стиль и дать ссылку на репозиторий.">Paste this text into AI/docs to quickly explain the style and share the repository link.</div>
+        <pre class="prompt-code" id="copyPromptText" data-prompt-en="Use this UI style:\nhttps://github.com/dmakhazen/developer_ui_style\n\nMake it dark, semantic, and data-dense." data-prompt-ru="Используй этот UI-стиль:\nhttps://github.com/dmakhazen/developer_ui_style\n\nСделай его темным, семантическим и насыщенным данными.">Use this UI style:
+https://github.com/dmakhazen/developer_ui_style
+
+      Make it dark, semantic, and data-dense.</pre>
+        <div class="prompt-actions">
+          <button class="prompt-copy-btn" id="copyPromptBtn" type="button" data-i18n-ru="Скопировать промт">Copy Prompt</button>
+          <span class="prompt-status" id="copyPromptStatus"></span>
+        </div>
+      </div>
+    </div>
+
+    <div class="section-header" id="examples-list">
       <div class="section-label">// UI Examples</div>
       <div class="section-title" data-i18n-ru="5 Production-grade интерфейсов">5 Production-grade Interfaces</div>
       <div class="section-sub" data-i18n-ru="Каждый пример применяет один и тот же design system в разных контекстах developer tools.">Each example applies the same design system to a different developer tool context.</div>
@@ -710,17 +765,17 @@ footer {
       <div class="principle">
         <div class="principle-icon">🎨</div>
         <div class="principle-title" data-i18n-ru="Семантический цвет">Semantic Color</div>
-        <div class="principle-desc" data-i18n-ru="Цвет - это язык, а не декор. Red = error. Yellow = warning. Green = success. Пользователь запоминает это один раз и читает состояние экрана за секунды.">Color is a language, not decoration. Red = error. Yellow = warning. Green = success. Users learn it once and read page state in seconds without reading text.</div>
+        <div class="principle-desc" data-i18n-ru="Цвет - это язык, а не декор. Красный = ошибка. Желтый = предупреждение. Зеленый = успех. Пользователь запоминает это один раз и считывает состояние экрана за секунды.">Color is a language, not decoration. Red = error. Yellow = warning. Green = success. Users learn it once and read page state in seconds without reading text.</div>
       </div>
       <div class="principle">
         <div class="principle-icon">𝙼</div>
-        <div class="principle-title" data-i18n-ru="Monospace как сигнал">Monospace as Signal</div>
-        <div class="principle-desc" data-i18n-ru="JetBrains Mono используется только для технических значений: numbers, IDs, SQL, timestamps. Его появление означает: 'это данные, а не текст'.">JetBrains Mono is used only for technical values - numbers, IDs, SQL, timestamps. Its presence signals: "this is data, not prose." Mixed with a sans-serif UI font for clear hierarchy.</div>
+        <div class="principle-title" data-i18n-ru="Моноширинный шрифт как сигнал">Monospace as Signal</div>
+        <div class="principle-desc" data-i18n-ru="JetBrains Mono используется только для технических значений: числа, ID, SQL и временные метки. Его появление означает: 'это данные, а не обычный текст'.">JetBrains Mono is used only for technical values - numbers, IDs, SQL, timestamps. Its presence signals: "this is data, not prose." Mixed with a sans-serif UI font for clear hierarchy.</div>
       </div>
       <div class="principle">
         <div class="principle-icon">▦</div>
         <div class="principle-title" data-i18n-ru="Плотность данных">Data Density</div>
-        <div class="principle-desc" data-i18n-ru="Без декоративного воздуха. Интерфейс плотный, но не хаотичный: группы разделены тонкими 1px line, а не большими пустотами.">No decorative white space. Information is dense but not chaotic - semantic groups are separated by 1px dividers, not large gaps. Users see more per viewport.</div>
+        <div class="principle-desc" data-i18n-ru="Без декоративного воздуха. Интерфейс плотный, но не хаотичный: группы разделены тонкими линиями 1px, а не большими пустотами.">No decorative white space. Information is dense but not chaotic - semantic groups are separated by 1px dividers, not large gaps. Users see more per viewport.</div>
       </div>
       <div class="principle">
         <div class="principle-icon">◧</div>
@@ -730,12 +785,12 @@ footer {
       <div class="principle">
         <div class="principle-icon">✦</div>
         <div class="principle-title" data-i18n-ru="Функция важнее формы">Function over Form</div>
-        <div class="principle-desc" data-i18n-ru="Каждый элемент должен давать данные или действие. Убери его - теряется смысл. Без декоративных gradient и лишней анимации.">Every element justifies its existence with data or an action. Remove it - something is lost. No hero illustrations, no onboarding animations, no decorative gradients.</div>
+        <div class="principle-desc" data-i18n-ru="Каждый элемент должен давать данные или действие. Убери его - теряется смысл. Без декоративных градиентов и лишней анимации.">Every element justifies its existence with data or an action. Remove it - something is lost. No hero illustrations, no onboarding animations, no decorative gradients.</div>
       </div>
       <div class="principle">
         <div class="principle-icon">⚙</div>
-        <div class="principle-title" data-i18n-ru="Parsed, а не raw">Parsed, not Raw</div>
-        <div class="principle-desc" data-i18n-ru="Вместо сырых логов интерфейс структурирует данные: model name, error message, SQL line. Когнитивная нагрузка заметно ниже.">Instead of dumping raw log output, the interface structures information: model name, error message, SQL line. Cognitive load drops significantly.</div>
+        <div class="principle-title" data-i18n-ru="Структурировано, а не сырой лог">Parsed, not Raw</div>
+        <div class="principle-desc" data-i18n-ru="Вместо сырых логов интерфейс структурирует данные: имя модели, текст ошибки, строка SQL. Когнитивная нагрузка заметно ниже.">Instead of dumping raw log output, the interface structures information: model name, error message, SQL line. Cognitive load drops significantly.</div>
       </div>
     </div>
   </div>
@@ -821,22 +876,19 @@ footer {
 </footer>
 
 <script>
-<!-- Yandex.Metrika counter -->
-<script type="text/javascript">
-  (function(m,e,t,r,i,k,a){
-    m[i]=m[i]||function(){(m[i].a=m[i].a||[]).push(arguments)};
-    m[i].l=1*new Date();
-    for (var j = 0; j < document.scripts.length; j++) {if (document.scripts[j].src === r) { return; }}
-    k=e.createElement(t),a=e.getElementsByTagName(t)[0],k.async=1,k.src=r,a.parentNode.insertBefore(k,a)
-  })(window, document,'script','https://mc.yandex.ru/metrika/tag.js', 'ym');
-
-  ym(95890673, 'init', {webvisor:true, clickmap:true, ecommerce:"dataLayer", referrer: document.referrer, url: location.href, accurateTrackBounce:true, trackLinks:true});
-</script>
-<noscript><div><img src="https://mc.yandex.ru/watch/95890673" style="position:absolute; left:-9999px;" alt="" /></div></noscript>
-<!-- /Yandex.Metrika counter -->
 (() => {
   const key = 'developer-ui-lang-v2';
   const translatable = document.querySelectorAll('[data-i18n-ru]');
+  const promptTextEl = document.getElementById('copyPromptText');
+  const copyPromptBtn = document.getElementById('copyPromptBtn');
+  const copyPromptStatus = document.getElementById('copyPromptStatus');
+
+  const setPromptText = (lang) => {
+    if (!promptTextEl) return;
+    const raw = lang === 'ru' ? promptTextEl.dataset.promptRu : promptTextEl.dataset.promptEn;
+    promptTextEl.textContent = raw.replace(/\\n/g, '\n');
+  };
+
   translatable.forEach((el) => {
     if (!el.dataset.i18nEn) {
       el.dataset.i18nEn = el.innerHTML;
@@ -851,6 +903,7 @@ footer {
     document.querySelectorAll('[data-lang-btn]').forEach((btn) => {
       btn.classList.toggle('active', btn.dataset.langBtn === lang);
     });
+    setPromptText(lang);
     localStorage.setItem(key, lang);
   };
 
@@ -858,9 +911,38 @@ footer {
     btn.addEventListener('click', () => applyLanguage(btn.dataset.langBtn));
   });
 
+  if (copyPromptBtn && promptTextEl && copyPromptStatus) {
+    copyPromptBtn.addEventListener('click', async () => {
+      const textToCopy = promptTextEl.textContent.trim();
+      try {
+        await navigator.clipboard.writeText(textToCopy);
+        copyPromptStatus.textContent = document.documentElement.lang === 'ru' ? 'Скопировано' : 'Copied';
+      } catch (err) {
+        copyPromptStatus.textContent = document.documentElement.lang === 'ru' ? 'Скопируйте вручную' : 'Copy manually';
+      }
+      setTimeout(() => {
+        copyPromptStatus.textContent = '';
+      }, 1400);
+    });
+  }
+
   applyLanguage(localStorage.getItem(key) || 'en');
 })();
 </script>
+
+<!-- Yandex.Metrika counter -->
+<script type="text/javascript">
+  (function(m,e,t,r,i,k,a){
+    m[i]=m[i]||function(){(m[i].a=m[i].a||[]).push(arguments)};
+    m[i].l=1*new Date();
+    for (var j = 0; j < document.scripts.length; j++) {if (document.scripts[j].src === r) { return; }}
+    k=e.createElement(t),a=e.getElementsByTagName(t)[0],k.async=1,k.src=r,a.parentNode.insertBefore(k,a)
+  })(window, document,'script','https://mc.yandex.ru/metrika/tag.js', 'ym');
+
+  ym(95890673, 'init', {webvisor:true, clickmap:true, ecommerce:"dataLayer", referrer: document.referrer, url: location.href, accurateTrackBounce:true, trackLinks:true});
+</script>
+<noscript><div><img src="https://mc.yandex.ru/watch/95890673" style="position:absolute; left:-9999px;" alt="" /></div></noscript>
+<!-- /Yandex.Metrika counter -->
 
 </body>
 </html>
